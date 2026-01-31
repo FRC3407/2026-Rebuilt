@@ -6,6 +6,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,6 +89,17 @@ public class RobotContainer {
         xboxController.back().whileTrue(new RunCommand(
                 m_robotDrive::setSwerveModulesToX,
                 m_robotDrive));
+
+        rightJoystick.button(8).onTrue(new RunCommand(() -> {
+            DigitalOutput dih = new DigitalOutput(0);
+            dih.set(true);
+            dih.close();
+        }));
+        rightJoystick.button(8).onFalse(new RunCommand(() -> {
+            DigitalOutput dih = new DigitalOutput(0);
+            dih.set(false);
+            dih.close();
+        }));
     }
 
     /**
