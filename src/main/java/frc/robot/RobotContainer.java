@@ -90,15 +90,12 @@ public class RobotContainer {
                 m_robotDrive::setSwerveModulesToX,
                 m_robotDrive));
 
-        rightJoystick.button(8).onTrue(new RunCommand(() -> {
-            DigitalOutput dih = new DigitalOutput(0);
+        DigitalOutput dih = new DigitalOutput(0);
+        rightJoystick.button(8).onTrue(new InstantCommand(() -> {
             dih.set(true);
-            dih.close();
         }));
-        rightJoystick.button(8).onFalse(new RunCommand(() -> {
-            DigitalOutput dih = new DigitalOutput(0);
+        rightJoystick.button(8).onFalse(new InstantCommand(() -> {
             dih.set(false);
-            dih.close();
         }));
     }
 
