@@ -69,7 +69,7 @@ public final class Constants {
         public static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
         public static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30));
 
-        public static final int navxCanId = 41;
+        public static final int navxCanId = 0;
     }
 
     public static final class ModuleConstants {
