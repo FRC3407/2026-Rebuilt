@@ -155,7 +155,7 @@ public class DriveSubsystem extends SubsystemBase {
                 });
 
         gyroDisplay.setNumber(getHeading());
-        voltageDisplay.setNumber(powerDistribution.getVoltage());
+        // voltageDisplay.setNumber(powerDistribution.getVoltage());
         odometryDisplay.setRobotPose(updatedPose);
         odometryLogger.set(getPose());
     }
@@ -266,7 +266,7 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public double getHeading() {
         if (RobotBase.isReal()) {
-            return -m_gyro.getYaw().magnitude();
+            return m_gyro.getYaw().magnitude();
         } else {
             return m_simGyroAngle.getDegrees();
         }
