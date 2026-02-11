@@ -77,13 +77,19 @@ public class RobotContainer {
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
         m_robotDrive.setDefaultCommand(new DriveCommand(
-                rightJoystick::getY,
-                rightJoystick::getX,
-                leftJoystick::getX,
+                // rightJoystick::getY,
+                // rightJoystick::getX,
+                // leftJoystick::getX,
+                xboxController::getRightX,
+                xboxController::getRightY,
+                xboxController::getLeftX,
+                () -> xboxController.leftBumper().getAsBoolean(),
                 m_robotDrive));
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
+                new InstantCommand(m_robotDrive::zeroHeading));
+        xboxController.a().onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
         xboxController.back().whileTrue(new RunCommand(
