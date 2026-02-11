@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -10,8 +12,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.DriveFeedforwards;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.Navx;
 
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
@@ -26,6 +27,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -34,7 +36,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -61,7 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightChassisAngularOffset);
 
     // The gyro sensor
-    private final AHRS m_gyro = new AHRS(NavXComType.kUSB1);
+    private final Navx m_gyro = new Navx(DriveConstants.navxCanId);
 
     // Odometry class for tracking robot pose
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -152,9 +153,9 @@ public class DriveSubsystem extends SubsystemBase {
                     m_rearLeft.getPosition(),
                     m_rearRight.getPosition()
                 });
-        
+
         gyroDisplay.setNumber(getHeading());
-        voltageDisplay.setNumber(powerDistribution.getVoltage());
+        // voltageDisplay.setNumber(powerDistribution.getVoltage());
         odometryDisplay.setRobotPose(updatedPose);
         odometryLogger.set(getPose());
     }
@@ -255,7 +256,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Zeroes the heading of the robot.
      */
     public void zeroHeading() {
-        m_gyro.reset();
+        m_gyro.resetYaw();
     }
 
     /**
@@ -264,8 +265,8 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the robot's heading in degrees, from -180 to 180
      */
     public double getHeading() {
-        if(RobotBase.isReal()) {
-            return Rotation2d.fromDegrees(-m_gyro.getAngle()).getDegrees();
+        if (RobotBase.isReal()) {
+            return m_gyro.getYaw().magnitude();
         } else {
             return m_simGyroAngle.getDegrees();
         }
@@ -277,7 +278,8 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        AngularVelocity[] omega = m_gyro.getAngularVel();
+        return omega[2].in(DegreesPerSecond) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -301,7 +303,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.drive(speeds.vxMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / Constants.DriveConstants.kMaxAngularSpeed,
-                false);
+                true);
     }
 
     //This can only be called from simulationPeriodic()
@@ -313,7 +315,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     //This can only be called from simulationPeriodic()
     private void updateSimEncoders(MAXSwerveModule... swerveModules) {
-        for(var swerveModule : swerveModules) {
+        for (var swerveModule : swerveModules) {
             swerveModule.updateSimEncoders();
         }
     }
