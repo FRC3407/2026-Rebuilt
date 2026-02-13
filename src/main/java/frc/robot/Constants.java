@@ -29,8 +29,8 @@ public final class Constants {
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.8;
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+        public static final double kMaxSpeedMetersPerSecond = 0.48;
+        public static final double kMaxAngularSpeed = .25 * Math.PI; // radians per second
 
         // Chassis configuration
 
@@ -90,9 +90,9 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final int kLeftJoystickPort = 1;
-        public static final int kRightJoystickPort = 2;
-        public static final int kXboxControllerPort = 0;
+        public static final int kLeftJoystickPort = 0;
+        public static final int kRightJoystickPort = 1;
+        public static final int kXboxControllerPort = 2;
         public static final double kDriveDeadband = 0.05;
     }
 

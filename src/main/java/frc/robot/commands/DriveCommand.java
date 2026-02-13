@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Meter;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -29,26 +30,29 @@ public class DriveCommand extends Command {
     private final DriveSubsystem driveSubsystem;
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
-    private final DoubleSupplier rotStick;
+    private final DoubleSupplier rotStick; 
+    private final DoubleSupplier rotSticky; 
     private final BooleanSupplier targeting_switch;
     private final Translation2d R_hub = new Translation2d(4.02844, 3.522);
     private final Translation2d B_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
-    private final PIDController targetLockPID = new PIDController(2, 0, 0);
-
+    private final PIDController targetLockPID = new PIDController(1, 0, 0);
+    
     /**
      * Drive the robot using joysticks.
      * 
      * @param forwardStick Joystick for forward translation.
      * @param sidewaysStick Joystick for sideways translation.
      * @param rotStick Joystick axis for rotation.
+     * @param rotSticky
      * @param drive DriveSubsystem
      * @param targeting_switch Controls the targeting system.
      */
-    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, BooleanSupplier targeting_switch,
+    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DoubleSupplier rotSticky, BooleanSupplier targeting_switch,
             DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStick = rotStick;
+        this.rotSticky = rotSticky;
         this.driveSubsystem = drive;
         this.targeting_switch = targeting_switch;
         addRequirements(this.driveSubsystem);
