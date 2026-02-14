@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -32,6 +33,7 @@ public class RobotContainer {
     // The robot's subsystems
     public final DriveSubsystem m_robotDrive;
     public final VisionSubsystem m_vision;
+    public final BeeperSubsystem m_beeper;
 
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
@@ -57,6 +59,7 @@ public class RobotContainer {
     private RobotContainer() {
         m_robotDrive = new DriveSubsystem();
         m_vision = new VisionSubsystem(m_robotDrive);
+        m_beeper = new BeeperSubsystem();
 
         configureButtonBindings();
 
@@ -90,13 +93,7 @@ public class RobotContainer {
                 m_robotDrive::setSwerveModulesToX,
                 m_robotDrive));
 
-        DigitalOutput dih = new DigitalOutput(0);
-        rightJoystick.button(8).onTrue(new InstantCommand(() -> {
-            dih.set(true);
-        }));
-        rightJoystick.button(8).onFalse(new InstantCommand(() -> {
-            dih.set(false);
-        }));
+        
     }
 
     /**
