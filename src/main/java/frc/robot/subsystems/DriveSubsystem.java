@@ -69,11 +69,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
             DriveConstants.kDriveKinematics,
             m_gyro.getRotation2d(),
-            new SwerveModulePosition[]{
-                m_frontLeft.getPosition(),
-                m_frontRight.getPosition(),
-                m_rearLeft.getPosition(),
-                m_rearRight.getPosition()
+            new SwerveModulePosition[] {
+                    m_frontLeft.getPosition(),
+                    m_frontRight.getPosition(),
+                    m_rearLeft.getPosition(),
+                    m_rearRight.getPosition()
             },
             DriveConstants.initialPoseMeters,
             DriveConstants.stateStdDevs,
@@ -103,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
      */
     private final StructPublisher<Pose2d> odometryLogger;
 
-    //Simulated Gryo
+    // Simulated Gryo
     private Rotation2d m_simGyroAngle = Rotation2d.fromDegrees(0);
     private double m_simGyroRate;
 
@@ -148,11 +148,11 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         final Pose2d updatedPose = m_odometry.update(
                 Rotation2d.fromDegrees(getHeading()),
-                new SwerveModulePosition[]{
-                    m_frontLeft.getPosition(),
-                    m_frontRight.getPosition(),
-                    m_rearLeft.getPosition(),
-                    m_rearRight.getPosition()
+                new SwerveModulePosition[] {
+                        m_frontLeft.getPosition(),
+                        m_frontRight.getPosition(),
+                        m_rearLeft.getPosition(),
+                        m_rearRight.getPosition()
                 });
 
         gyroDisplay.setNumber(getHeading());
@@ -178,11 +178,11 @@ public class DriveSubsystem extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
                 Rotation2d.fromDegrees(getHeading()),
-                new SwerveModulePosition[]{
-                    m_frontLeft.getPosition(),
-                    m_frontRight.getPosition(),
-                    m_rearLeft.getPosition(),
-                    m_rearRight.getPosition()
+                new SwerveModulePosition[] {
+                        m_frontLeft.getPosition(),
+                        m_frontRight.getPosition(),
+                        m_rearLeft.getPosition(),
+                        m_rearRight.getPosition()
                 },
                 pose);
     }
@@ -194,11 +194,11 @@ public class DriveSubsystem extends SubsystemBase {
     /**
      * Method to drive the robot using joystick info.
      *
-     * @param xSpeed Speed of the robot in the x direction (forward).
-     * @param ySpeed Speed of the robot in the y direction (sideways).
-     * @param rot Angular rate of the robot.
+     * @param xSpeed        Speed of the robot in the x direction (forward).
+     * @param ySpeed        Speed of the robot in the y direction (sideways).
+     * @param rot           Angular rate of the robot.
      * @param fieldRelative Whether the provided x and y speeds are relative to
-     * the field.
+     *                      the field.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         // Convert the commanded speeds into the correct units for the drivetrain
@@ -308,14 +308,14 @@ public class DriveSubsystem extends SubsystemBase {
                 true);
     }
 
-    //This can only be called from simulationPeriodic()
+    // This can only be called from simulationPeriodic()
     private void updateGyro() {
         ChassisSpeeds speeds = getChassisSpeeds();
         m_simGyroRate = speeds.omegaRadiansPerSecond;
         m_simGyroAngle = m_simGyroAngle.plus(Rotation2d.fromRadians(m_simGyroRate * .02));
     }
 
-    //This can only be called from simulationPeriodic()
+    // This can only be called from simulationPeriodic()
     private void updateSimEncoders(MAXSwerveModule... swerveModules) {
         for (var swerveModule : swerveModules) {
             swerveModule.updateSimEncoders();

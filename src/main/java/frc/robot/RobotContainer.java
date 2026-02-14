@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.BeeperSubsystem;
+import frc.robot.commands.TargetCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -76,24 +77,24 @@ public class RobotContainer {
      * {@link JoystickButton}.
      */
     private void configureButtonBindings() {
-
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
+
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
                 m_robotDrive));
 
+        rightJoystick.trigger().whileTrue(new TargetCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                m_robotDrive));
+
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
-        xboxController.back().whileTrue(new RunCommand(
-                m_robotDrive::setSwerveModulesToX,
-                m_robotDrive));
-
-        
     }
 
     /**
