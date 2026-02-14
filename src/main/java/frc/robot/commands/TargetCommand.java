@@ -92,8 +92,7 @@ public class TargetCommand extends Command {
         Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
         Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
         Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
-        rot = MathUtil.clamp(-targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
-        rot = rot * -1;
+        rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
 }
