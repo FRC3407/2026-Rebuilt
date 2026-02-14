@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -94,6 +95,14 @@ public final class Constants {
         public static final int kRightJoystickPort = 1;
         public static final int kXboxControllerPort = 2;
         public static final double kDriveDeadband = 0.05;
+    }
+
+    public static final class TargetConstants {
+        public static final Translation2d Blue_hub = new Translation2d(4.02844, 3.522);
+        public static final Translation2d Red_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
+        public static final double Proportional = 0.15;
+        public static final double Integral = 0;
+        public static final double Derivative = 0.011;
     }
 
     public static final class AutoConstants {

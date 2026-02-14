@@ -15,12 +15,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import static frc.robot.Constants.TargetConstants.*;
 
 /** Hub targeting command {@code DriveSubystem} using right joystick only */
 public class TargetCommand extends Command {
@@ -29,9 +32,8 @@ public class TargetCommand extends Command {
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
     private final DoubleSupplier rotStick;
-    private final Translation2d Blue_hub = new Translation2d(4.02844, 3.522);
-    private final Translation2d Red_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
-    private final PIDController targetLockPID = new PIDController(1, 0, 0);
+    private final PIDController targetLockPID = new PIDController(Proportional, Integral, Derivative);
+
 
     /**
      * Drive the robot using joysticks.
@@ -41,13 +43,13 @@ public class TargetCommand extends Command {
      * @param rotStick      Joystick axis for rotation.
      * @param drive         DriveSubsystem
      */
-    public TargetCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick,
-            DriveSubsystem drive) {
+    public TargetCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStick = rotStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
+        SmartDashboard.putData("PID", this);
     }
 
     private Translation2d getTargetHub() {
@@ -60,31 +62,37 @@ public class TargetCommand extends Command {
     }
 
     @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addDoubleProperty("Proportional", () -> targetLockPID.getP(), (p) -> targetLockPID.setP(p));
+        builder.addDoubleProperty("Integral", () -> targetLockPID.getI(), (i) -> targetLockPID.setI(i));
+        builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
+    }
+
+    @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
 
-        double rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
+        double rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband);
         if (RobotBase.isSimulation()) {
             ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
             xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
             rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband);
         }
         Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
-        if (targetpose != null) {
-            Pose2d currentpose = driveSubsystem.getPose();
-            Rotation2d ang = currentpose.getRotation();
-            Distance y = currentpose.getMeasureY();
-            Distance x = currentpose.getMeasureX();
-            Distance tagx = targetpose.getMeasureX();
-            Distance tagy = targetpose.getMeasureY();
-            Distance deltax = tagx.minus(x);
-            Distance deltay = tagy.minus(y);
-            Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
-            Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
-            Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
-            rot = MathUtil.clamp(-targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
-        }
+        Pose2d currentpose = driveSubsystem.getPose();
+        Rotation2d ang = currentpose.getRotation();
+        Distance y = currentpose.getMeasureY();
+        Distance x = currentpose.getMeasureX();
+        Distance tagx = targetpose.getMeasureX();
+        Distance tagy = targetpose.getMeasureY();
+        Distance deltax = tagx.minus(x);
+        Distance deltay = tagy.minus(y);
+        Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
+        Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
+        Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
+        rot = MathUtil.clamp(-targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
         rot = rot * -1;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
