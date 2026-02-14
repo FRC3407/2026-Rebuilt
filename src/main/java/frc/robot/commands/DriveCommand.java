@@ -18,7 +18,6 @@ public class DriveCommand extends Command {
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
     private final DoubleSupplier rotStick;
-    private final DoubleSupplier rotSticky; 
 
     /**
      * Drive the robot using joysticks.
@@ -29,20 +28,18 @@ public class DriveCommand extends Command {
      * @param rotSticky
      * @param drive DriveSubsystem
      */
-    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DoubleSupplier rotSticky, 
-            DriveSubsystem drive) {
+    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStick = rotStick;
-        this.rotSticky = rotSticky;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
     }
 
     @Override
     public void execute() {
-        double xSpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        double ySpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
+        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
+        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }

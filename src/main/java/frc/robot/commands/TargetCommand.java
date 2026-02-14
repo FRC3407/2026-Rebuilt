@@ -29,7 +29,6 @@ public class TargetCommand extends Command {
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
     private final DoubleSupplier rotStick; 
-    private final DoubleSupplier rotSticky; 
     private final Translation2d R_hub = new Translation2d(4.02844, 3.522);
     private final Translation2d B_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
     private final PIDController targetLockPID = new PIDController(1, 0, 0);
@@ -40,15 +39,12 @@ public class TargetCommand extends Command {
      * @param forwardStick Joystick for forward translation.
      * @param sidewaysStick Joystick for sideways translation.
      * @param rotStick Joystick axis for rotation.
-     * @param rotSticky
      * @param drive DriveSubsystem
      */
-    public TargetCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DoubleSupplier rotSticky,
-            DriveSubsystem drive) {
+    public TargetCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStick = rotStick;
-        this.rotSticky = rotSticky;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
     }
@@ -66,7 +62,7 @@ public class TargetCommand extends Command {
     @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband);
+        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
   
         double rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         if (RobotBase.isSimulation()){
@@ -88,7 +84,6 @@ public class TargetCommand extends Command {
             Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
             Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
             double raw_rot = -targetLockPID.calculate(relative_rotation.getRadians(), 0);
-            System.out.print(raw_rot);
             if (raw_rot < -1){
                 rot = -1;
             }
