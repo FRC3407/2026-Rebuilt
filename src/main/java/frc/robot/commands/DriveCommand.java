@@ -22,13 +22,14 @@ public class DriveCommand extends Command {
     /**
      * Drive the robot using joysticks.
      * 
-     * @param forwardStick Joystick for forward translation.
+     * @param forwardStick  Joystick for forward translation.
      * @param sidewaysStick Joystick for sideways translation.
-     * @param rotStick Joystick axis for rotation.
+     * @param rotStick      Joystick axis for rotation.
      * @param rotSticky
-     * @param drive DriveSubsystem
+     * @param drive         DriveSubsystem
      */
-    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick, DriveSubsystem drive) {
+    public DriveCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStick,
+            DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStick = rotStick;

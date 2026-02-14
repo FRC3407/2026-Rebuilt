@@ -78,22 +78,21 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the left stick.
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
-                    rightJoystick::getY,
-                    rightJoystick::getX,
-                    leftJoystick::getX,
-                    m_robotDrive));
+                rightJoystick::getY,
+                rightJoystick::getX,
+                leftJoystick::getX,
+                m_robotDrive));
 
         rightJoystick.trigger().whileTrue(new TargetCommand(rightJoystick::getY,
-                    rightJoystick::getX,
-                    leftJoystick::getX,
-                    m_robotDrive));
+                rightJoystick::getX,
+                leftJoystick::getX,
+                m_robotDrive));
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
     }
-
 
     /**
      * Use this method to set up all autonomous routines and add them to a
