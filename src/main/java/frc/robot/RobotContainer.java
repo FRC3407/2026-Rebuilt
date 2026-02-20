@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.PointCommand;
 import frc.robot.commands.TargetCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -87,6 +88,13 @@ public class RobotContainer {
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
+
+        leftJoystick.trigger().whileTrue(new PointCommand(
+            rightJoystick::getY,
+            rightJoystick::getX,
+            leftJoystick::getX,
+            leftJoystick::getY, 
+            m_robotDrive));
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
