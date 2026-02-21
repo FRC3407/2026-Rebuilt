@@ -13,6 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -77,6 +78,7 @@ public class TargetCommand extends Command {
         }
         Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
+        currentpose = currentpose.transformBy(shooterTransform);
         Rotation2d ang = currentpose.getRotation();
         Distance y = currentpose.getMeasureY();
         Distance x = currentpose.getMeasureX();
