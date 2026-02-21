@@ -9,6 +9,8 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
@@ -98,11 +100,12 @@ public final class Constants {
     }
 
     public static final class TargetConstants {
-        public static final Translation2d Blue_hub = new Translation2d(4.02844, 3.522);
-        public static final Translation2d Red_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
+        public static final Translation2d Blue_hub = new Translation2d(4.625,4.035);
+        public static final Translation2d Red_hub = new Translation2d(16.54 - 4.625, 4.035);
         public static final double Proportional = 0.15;
         public static final double Integral = 0;
         public static final double Derivative = 0.011;
+        public static final Transform2d shooterTransform = new Transform2d(.5,0, Rotation2d.fromDegrees(-90));
     }
 
     public static final class AutoConstants {
