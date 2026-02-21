@@ -86,9 +86,9 @@ public class RobotContainer {
                 leftJoystick::getX,
                 m_robotDrive));
 
-        rightJoystick.trigger().whileTrue(new TargetCommand(
-                rightJoystick::getY,
-                rightJoystick::getX,
+        xboxController.leftBumper().whileTrue(new TargetCommand(
+                xboxController::getRightY,
+                xboxController::getRightX,
                 m_robotDrive));
 
         // Button 7 on the right stick resets the gyro
