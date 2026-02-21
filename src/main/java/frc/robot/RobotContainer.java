@@ -23,6 +23,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -97,7 +98,7 @@ public class RobotContainer {
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
-        xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter));
+        xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter,m_robotDrive));
     }
 
     /**

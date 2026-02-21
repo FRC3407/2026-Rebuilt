@@ -20,6 +20,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,6 +29,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -38,6 +40,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import static frc.robot.Constants.TargetConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -170,11 +179,34 @@ public class DriveSubsystem extends SubsystemBase {
         return m_odometry.getEstimatedPosition();
     }
 
+    public Translation2d getTargetHub() {
+        Optional<Alliance> al = DriverStation.getAlliance();
+        if (al.get() == DriverStation.Alliance.Blue) {
+            return Blue_hub;
+        } else {
+            return Red_hub;
+        }
+    }
+
+    public double distanceToHub(){
+        Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
+        Pose2d currentpose = getPose();
+        Distance y = currentpose.getMeasureY();
+        Distance x = currentpose.getMeasureX();
+        Distance tagx = targetpose.getMeasureX();
+        Distance tagy = targetpose.getMeasureY();
+        Distance deltax = tagx.minus(x);
+        Distance deltay = tagy.minus(y);
+        double distance = Math.sqrt(deltax.magnitude()*deltax.magnitude()+deltay.magnitude()*deltay.magnitude());
+        return distance;
+    }
+
     /**
      * Resets the odometry to the specified pose.
      *
      * @param pose The pose to which to set the odometry.
      */
+
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
                 Rotation2d.fromDegrees(getHeading()),

@@ -50,15 +50,6 @@ public class TargetCommand extends Command {
         SmartDashboard.putData("PID", this);
     }
 
-    private Translation2d getTargetHub() {
-        Optional<Alliance> al = DriverStation.getAlliance();
-        if (al.get() == DriverStation.Alliance.Blue) {
-            return Blue_hub;
-        } else {
-            return Red_hub;
-        }
-    }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
@@ -75,7 +66,7 @@ public class TargetCommand extends Command {
             ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
             xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
         }
-        Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
+        Pose2d targetpose = new Pose2d(driveSubsystem.getTargetHub(), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
         Rotation2d ang = currentpose.getRotation();
         Distance y = currentpose.getMeasureY();
