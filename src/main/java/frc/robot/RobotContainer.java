@@ -43,8 +43,6 @@ public class RobotContainer extends AllianceRelativeConstants{
     private final SendableChooser<Command> autoChooser;
     public boolean isRedAlliance;
     private static RobotContainer instance;
-    private final AllianceRelativeConstants constants = new AllianceRelativeConstants();
-
     public static synchronized RobotContainer getInstance() {
         if (instance == null) {
             instance = new RobotContainer();
