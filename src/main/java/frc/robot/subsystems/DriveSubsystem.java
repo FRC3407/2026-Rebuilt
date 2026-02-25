@@ -4,6 +4,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
 
@@ -40,12 +41,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import static frc.robot.Constants.TargetConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -197,7 +192,7 @@ public class DriveSubsystem extends SubsystemBase {
         Distance tagy = targetpose.getMeasureY();
         Distance deltax = tagx.minus(x);
         Distance deltay = tagy.minus(y);
-        double distance = Math.sqrt(deltax.magnitude()*deltax.magnitude()+deltay.magnitude()*deltay.magnitude());
+        double distance = Math.sqrt(deltax.in(Meters)*deltax.in(Meters)+deltay.in(Meters)*deltay.in(Meters));
         return distance;
     }
 
