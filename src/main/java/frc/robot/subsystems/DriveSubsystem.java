@@ -180,14 +180,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Translation2d getTargetHub() {
-        Optional<Alliance> al = DriverStation.getAlliance();
-        if (al.get() == DriverStation.Alliance.Blue) {
-            return Blue_hub;
-        } else {
+        if (isRedAlliance()) {
             return Red_hub;
+        } else {
+            return Blue_hub;
         }
     }
 
+    /**Gets the distance in meters*/
     public double distanceToHub(){
         Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
         Pose2d currentpose = getPose();

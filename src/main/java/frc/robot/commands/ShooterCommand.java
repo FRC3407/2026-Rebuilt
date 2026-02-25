@@ -4,13 +4,10 @@
 
 package frc.robot.commands;
 
-import java.util.Optional;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShooterCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
     private final DriveSubsystem driveSubsystem;
@@ -20,8 +17,6 @@ public class ShooterCommand extends Command {
         shooterSubsystem = m_shooter;
         driveSubsystem = m_drive;
         addRequirements(shooterSubsystem);
-        addRequirements(driveSubsystem);
-        // Use addRequirements() here to declare subsystem dependencies.
     }
 
     // Called every time the scheduler runs while the command is scheduled.
