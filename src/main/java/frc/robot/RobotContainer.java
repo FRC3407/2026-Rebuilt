@@ -3,8 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 
+
+import java.util.Optional;
+import frc.robot.AllianceRelativeConstants;
+import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.XboxController;
@@ -17,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.TargetConstants;
+import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
@@ -29,22 +36,21 @@ import frc.robot.subsystems.VisionSubsystem;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer extends AllianceRelativeConstants{
 
     // The robot's subsystems
     public final DriveSubsystem m_robotDrive;
     public final VisionSubsystem m_vision;
     public final BeeperSubsystem m_beeper;
-
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
     private final CommandXboxController xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
-
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
-
+    public boolean isRedAlliance;
     private static RobotContainer instance;
+    private final AllianceRelativeConstants constants = new AllianceRelativeConstants();
 
     public static synchronized RobotContainer getInstance() {
         if (instance == null) {
@@ -62,7 +68,6 @@ public class RobotContainer {
         m_vision = new VisionSubsystem(m_robotDrive);
         m_beeper = new BeeperSubsystem();
 
-        configureButtonBindings();
 
         autoChooser = configureAutonomous();
 
@@ -76,7 +81,7 @@ public class RobotContainer {
      * {@link XboxController}), and then calling passing it to a
      * {@link JoystickButton}.
      */
-    private void configureButtonBindings() {
+    public void configureButtonBindings() {
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
@@ -90,7 +95,12 @@ public class RobotContainer {
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-
+        xboxController.a().whileTrue(AutoBuilder.pathfindToPose(AllianceRelativeConstants.getHud(),
+        //PathfindingConstants.Red_hub_pose,
+        PathfindingConstants.constraints,
+        0.0 // Goal end velocity in meters/sec
+        
+        ));
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));

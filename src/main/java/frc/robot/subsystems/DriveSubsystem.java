@@ -111,7 +111,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putData(odometryDisplay);
         odometryLogger = NetworkTableInstance.getDefault().getStructTopic("Odometry", Pose2d.struct).publish();
-
         config = loadPathPlannerSettings();
         AutoBuilder.configure(
                 this::getPose,
@@ -304,7 +303,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.drive(speeds.vxMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / Constants.DriveConstants.kMaxAngularSpeed,
-                true);
+                false);
     }
 
     // This can only be called from simulationPeriodic()
