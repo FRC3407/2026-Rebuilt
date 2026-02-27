@@ -29,7 +29,7 @@ import frc.robot.subsystems.VisionSubsystem;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer extends AllianceRelativeConstants{
+public class RobotContainer{
 
     // The robot's subsystems
     public final DriveSubsystem m_robotDrive;
@@ -86,7 +86,7 @@ public class RobotContainer extends AllianceRelativeConstants{
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-        xboxController.a().whileTrue(AutoBuilder.pathfindToPose(AllianceRelativeConstants.getHud(),
+        xboxController.a().onTrue(AutoBuilder.pathfindToPose(AllianceRelativeConstants.getHud(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose),
         //PathfindingConstants.Red_hub_pose,
         PathfindingConstants.constraints,
         0.0 // Goal end velocity in meters/sec
