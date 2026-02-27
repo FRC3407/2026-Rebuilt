@@ -4,9 +4,8 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-
 import java.util.Optional;
-
+import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -34,9 +33,12 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PathfindingConstants;
+import frc.robot.Constants.TargetConstants;
 import frc.robot.RobotContainer;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -167,7 +169,25 @@ public class DriveSubsystem extends SubsystemBase {
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
-
+    public double getHubDistance(){ // returns distance between robot and its hub in meters we will wanna use this to make lights a certain color when in optimal shooting range
+        return getPose().getTranslation().getDistance(getAllianceRelative(TargetConstants.Blue_hub, TargetConstants.Red_hub));
+    }
+    public <T> T getAllianceRelative(T red_var, T blue_var){ 
+        if (isRedAlliance()){
+            return red_var;
+        }
+        else{
+            return blue_var;
+        }
+    }
+    public Supplier<Command> pathfindToPoseSupplier(Pose2d red_pose, Pose2d blue_pose){
+        Supplier<Command> poseCommandSupplier = ()-> AutoBuilder.pathfindToPose(
+            getAllianceRelative(red_pose, blue_pose),
+            PathfindingConstants.constraints,
+            0.0
+        );
+        return poseCommandSupplier;
+    }
     /**
      * Resets the odometry to the specified pose.
      *

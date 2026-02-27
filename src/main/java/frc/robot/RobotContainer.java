@@ -5,12 +5,16 @@ package frc.robot;
 
 
 
+import java.util.Set;
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,7 +45,6 @@ public class RobotContainer{
     private final CommandXboxController xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
-    public boolean isRedAlliance;
     private static RobotContainer instance;
     public static synchronized RobotContainer getInstance() {
         if (instance == null) {
@@ -61,7 +64,7 @@ public class RobotContainer{
 
 
         autoChooser = configureAutonomous();
-
+        configureButtonBindings();
         configureDashboard();
     }
 
@@ -72,7 +75,7 @@ public class RobotContainer{
      * {@link XboxController}), and then calling passing it to a
      * {@link JoystickButton}.
      */
-    public void configureButtonBindings() {
+    private void configureButtonBindings() {
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
@@ -86,12 +89,9 @@ public class RobotContainer{
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-        xboxController.a().onTrue(AutoBuilder.pathfindToPose(AllianceRelativeConstants.getHud(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose),
-        //PathfindingConstants.Red_hub_pose,
-        PathfindingConstants.constraints,
-        0.0 // Goal end velocity in meters/sec
-        
-        ));
+        xboxController.a().onTrue(
+            new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
+
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
