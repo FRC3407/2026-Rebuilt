@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
@@ -140,5 +142,12 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFields kFieldLayout = AprilTagFields.k2026RebuiltWelded;
         public static final double kMaxAmbiguity = 0.10;
+    }
+
+    public static final class ShooterConstants {
+        /** Vortex motor*/
+        public static final int kShooterCanId = 16;
+        /** Neo motor*/
+        public static final int kSpindexerCanId = 13;
     }
 }

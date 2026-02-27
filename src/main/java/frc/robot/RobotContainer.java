@@ -22,10 +22,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -39,6 +42,8 @@ public class RobotContainer{
     public final DriveSubsystem m_robotDrive;
     public final VisionSubsystem m_vision;
     public final BeeperSubsystem m_beeper;
+    public final ShooterSubsystem m_shooter;
+
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -61,6 +66,7 @@ public class RobotContainer{
         m_robotDrive = new DriveSubsystem();
         m_vision = new VisionSubsystem(m_robotDrive);
         m_beeper = new BeeperSubsystem();
+        m_shooter = new ShooterSubsystem();
 
 
         autoChooser = configureAutonomous();
@@ -96,6 +102,7 @@ public class RobotContainer{
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
+        xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter,m_robotDrive));
     }
 
     /**

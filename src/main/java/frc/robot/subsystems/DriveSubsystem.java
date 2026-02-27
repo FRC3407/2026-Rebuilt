@@ -19,6 +19,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -40,6 +41,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.Constants.TargetConstants;
 import frc.robot.RobotContainer;
+import static frc.robot.Constants.TargetConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -169,10 +171,8 @@ public class DriveSubsystem extends SubsystemBase {
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
-    public double getHubDistance(){ // returns distance between robot and its hub in meters we will wanna use this to make lights a certain color when in optimal shooting range
-        return getPose().getTranslation().getDistance(getAllianceRelative(TargetConstants.Blue_hub, TargetConstants.Red_hub));
-    }
-    public <T> T getAllianceRelative(T red_var, T blue_var){ 
+
+    public <T> T getAllianceRelative(T red_var, T blue_var){ //this needs to be fundamentally different from gettarget hub, as it should be able to handle a variety of 2d types and a variety of variables
         if (isRedAlliance()){
             return red_var;
         }
@@ -188,11 +188,28 @@ public class DriveSubsystem extends SubsystemBase {
         );
         return poseCommandSupplier;
     }
+
+   /*  public Translation2d getTargetHub() {
+        if (isRedAlliance()) {
+            return Red_hub;
+        } else {
+            return Blue_hub;
+        }
+    } */ // kept this in case we want it, but might be repetitve considering getAllianceRelative
+
+    /** @return distance in meters*/
+    public double distanceToHub(){
+        Pose2d currentpose = getPose();
+        double distance = currentpose.getTranslation().getDistance(getAllianceRelative(Red_hub, Blue_hub));
+        return distance;
+    }
+
     /**
      * Resets the odometry to the specified pose.
      *
      * @param pose The pose to which to set the odometry.
      */
+
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
                 Rotation2d.fromDegrees(getHeading()),
@@ -323,7 +340,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.drive(speeds.vxMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / Constants.DriveConstants.kMaxAngularSpeed,
-                false);
+                false); //should NOT drive the robot field relative, as it is used in pathplanner as a way to drive the robot relative to the robot, hence driveRobotRelative, and not driveFieldRelative. Using field relative here will break pathplanner in paths with rotation and translation
     }
 
     // This can only be called from simulationPeriodic()
