@@ -14,4 +14,4 @@ The FRC 2026 REBUILT competitive code for Team 3407 Wildcards. The robot uses a 
 
 
 
-*Written by Programming Captain 0saqils*
+*Written by Captain Nouma*

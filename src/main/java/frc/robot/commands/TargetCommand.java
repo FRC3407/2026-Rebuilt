@@ -5,25 +5,21 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meter;
+import static frc.robot.Constants.TargetConstants.*;
 
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import static frc.robot.Constants.TargetConstants.*;
 
 /** Hub targeting command {@code DriveSubystem} using right joystick only */
 public class TargetCommand extends Command {
@@ -50,15 +46,6 @@ public class TargetCommand extends Command {
         SmartDashboard.putData("PID", this);
     }
 
-    private Translation2d getTargetHub() {
-        Optional<Alliance> al = DriverStation.getAlliance();
-        if (al.get() == DriverStation.Alliance.Blue) {
-            return Blue_hub;
-        } else {
-            return Red_hub;
-        }
-    }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
@@ -71,8 +58,13 @@ public class TargetCommand extends Command {
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
+        if (RobotBase.isSimulation()) {
+            ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
+            xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
+        }
+        Pose2d targetpose = new Pose2d(driveSubsystem.getTargetHub(), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
+        currentpose = currentpose.transformBy(shooterTransform);
         Rotation2d ang = currentpose.getRotation();
         Distance y = currentpose.getMeasureY();
         Distance x = currentpose.getMeasureX();

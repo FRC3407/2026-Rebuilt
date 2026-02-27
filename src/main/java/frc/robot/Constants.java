@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
@@ -98,14 +103,15 @@ public final class Constants {
     }
 
     public static final class TargetConstants {
-        public static final Translation2d Blue_hub = new Translation2d(4.02844, 3.522);
-        public static final Translation2d Red_hub = new Translation2d(16.54 - 4.02844, 8.07 - 3.522);
         public static final double targetProportional = 0.15;
         public static final double targetIntegral = 0;
         public static final double targetDerivative = 0.011;
         public static final double pointProportional = 0.15;
         public static final double pointIntegral = 0;
         public static final double pointDerivative = 0.011;
+        public static final Translation2d Blue_hub = new Translation2d(4.625,4.035);
+        public static final Translation2d Red_hub = new Translation2d(16.54 - 4.625, 4.035);
+        public static final Transform2d shooterTransform = new Transform2d(.5,0, Rotation2d.fromDegrees(-90));
     }
 
     public static final class AutoConstants {
@@ -131,5 +137,12 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFields kFieldLayout = AprilTagFields.k2026RebuiltWelded;
         public static final double kMaxAmbiguity = 0.10;
+    }
+
+    public static final class ShooterConstants {
+        /** Vortex motor*/
+        public static final int kShooterCanId = 16;
+        /** Neo motor*/
+        public static final int kSpindexerCanId = 13;
     }
 }
