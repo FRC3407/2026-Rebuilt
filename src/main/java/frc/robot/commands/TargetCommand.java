@@ -62,7 +62,7 @@ public class TargetCommand extends Command {
             ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
             xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
         }
-        Pose2d targetpose = new Pose2d(driveSubsystem.getTargetHub(), new Rotation2d());
+        Pose2d targetpose = new Pose2d(driveSubsystem.getAllianceRelative(Red_hub, Blue_hub), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
         currentpose = currentpose.transformBy(shooterTransform);
         Rotation2d ang = currentpose.getRotation();

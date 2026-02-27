@@ -4,9 +4,8 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-
 import java.util.Optional;
-
+import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -35,9 +34,12 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PathfindingConstants;
+import frc.robot.Constants.TargetConstants;
 import frc.robot.RobotContainer;
 import static frc.robot.Constants.TargetConstants.*;
 
@@ -113,7 +115,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putData(odometryDisplay);
         odometryLogger = NetworkTableInstance.getDefault().getStructTopic("Odometry", Pose2d.struct).publish();
-
         config = loadPathPlannerSettings();
         AutoBuilder.configure(
                 this::getPose,
@@ -171,18 +172,35 @@ public class DriveSubsystem extends SubsystemBase {
         return m_odometry.getEstimatedPosition();
     }
 
-    public Translation2d getTargetHub() {
+    public <T> T getAllianceRelative(T red_var, T blue_var){ //this needs to be fundamentally different from gettarget hub, as it should be able to handle a variety of 2d types and a variety of variables
+        if (isRedAlliance()){
+            return red_var;
+        }
+        else{
+            return blue_var;
+        }
+    }
+    public Supplier<Command> pathfindToPoseSupplier(Pose2d red_pose, Pose2d blue_pose){
+        Supplier<Command> poseCommandSupplier = ()-> AutoBuilder.pathfindToPose(
+            getAllianceRelative(red_pose, blue_pose),
+            PathfindingConstants.constraints,
+            0.0
+        );
+        return poseCommandSupplier;
+    }
+
+   /*  public Translation2d getTargetHub() {
         if (isRedAlliance()) {
             return Red_hub;
         } else {
             return Blue_hub;
         }
-    }
+    } */ // kept this in case we want it, but might be repetitve considering getAllianceRelative
 
     /** @return distance in meters*/
     public double distanceToHub(){
         Pose2d currentpose = getPose();
-        double distance = currentpose.getTranslation().getDistance(getTargetHub());
+        double distance = currentpose.getTranslation().getDistance(getAllianceRelative(Red_hub, Blue_hub));
         return distance;
     }
 
@@ -322,7 +340,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.drive(speeds.vxMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.vyMetersPerSecond / Constants.DriveConstants.kMaxSpeedMetersPerSecond,
                 speeds.omegaRadiansPerSecond / Constants.DriveConstants.kMaxAngularSpeed,
-                true);
+                false); //should NOT drive the robot field relative, as it is used in pathplanner as a way to drive the robot relative to the robot, hence driveRobotRelative, and not driveFieldRelative. Using field relative here will break pathplanner in paths with rotation and translation
     }
 
     // This can only be called from simulationPeriodic()
