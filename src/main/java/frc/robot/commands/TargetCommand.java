@@ -31,7 +31,7 @@ public class TargetCommand extends Command {
     private final DriveSubsystem driveSubsystem;
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
-    private final PIDController targetLockPID = new PIDController(Proportional, Integral, Derivative);
+    private final PIDController targetLockPID = new PIDController(targetProportional, targetIntegral, targetDerivative);
 
 
     /**
@@ -71,10 +71,6 @@ public class TargetCommand extends Command {
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        if (RobotBase.isSimulation()) {
-            ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-            xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
-        }
         Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
         Rotation2d ang = currentpose.getRotation();

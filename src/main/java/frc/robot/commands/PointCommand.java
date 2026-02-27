@@ -33,7 +33,7 @@ public class PointCommand extends Command {
     private final DoubleSupplier sidewaysStick;
     private final DoubleSupplier rotStickx;
     private final DoubleSupplier rotSticky;
-    private final PIDController pointPID = new PIDController(Proportional, Integral, Derivative);
+    private final PIDController pointPID = new PIDController(pointProportional, pointIntegral, pointDerivative);
 
 
     /**
@@ -55,16 +55,15 @@ public class PointCommand extends Command {
     }
 
     private double joystickDifference() {
-        double x = MathUtil.applyDeadband(rotStickx.getAsDouble(), OIConstants.kDriveDeadband);
-        double y = MathUtil.applyDeadband(rotSticky.getAsDouble(), OIConstants.kDriveDeadband);
-        Translation2d j = new Translation2d(x, y);
-        double jAngle = j.getAngle().getRadians();
-        double bAngle = driveSubsystem.getPose().getRotation().getRadians();
-        double jb = jAngle - bAngle;
-        double angle = MathUtil.angleModulus(jb);
-        System.out.println(angle);
+        double x = -rotStickx.getAsDouble();
+        double y = rotSticky.getAsDouble();
 
-        return angle;
+        Translation2d j = new Translation2d(x, y);
+        Rotation2d jAngle = j.getAngle();
+        Rotation2d bAngle = driveSubsystem.getPose().getRotation();
+        double jb = jAngle.minus(bAngle).getRadians();
+        System.out.println(jb);
+        return MathUtil.applyDeadband(jb, OIConstants.kDriveDeadband);
     }
 
     @Override
@@ -79,10 +78,6 @@ public class PointCommand extends Command {
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        if (RobotBase.isSimulation()) {
-            ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-            xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
-        }
         double rot = MathUtil.clamp(pointPID.calculate(joystickDifference(), 0), -1, 1);
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
