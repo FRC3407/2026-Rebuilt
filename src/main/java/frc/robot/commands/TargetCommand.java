@@ -5,25 +5,23 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meter;
+import static frc.robot.Constants.TargetConstants.Derivative;
+import static frc.robot.Constants.TargetConstants.Integral;
+import static frc.robot.Constants.TargetConstants.Proportional;
 
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import static frc.robot.Constants.TargetConstants.*;
 
 /** Hub targeting command {@code DriveSubystem} using right joystick only */
 public class TargetCommand extends Command {

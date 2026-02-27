@@ -4,7 +4,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
 
@@ -30,7 +29,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -182,17 +180,10 @@ public class DriveSubsystem extends SubsystemBase {
         }
     }
 
-    /**Gets the distance in meters*/
+    /** @return distance in meters*/
     public double distanceToHub(){
-        Pose2d targetpose = new Pose2d(getTargetHub(), new Rotation2d());
         Pose2d currentpose = getPose();
-        Distance y = currentpose.getMeasureY();
-        Distance x = currentpose.getMeasureX();
-        Distance tagx = targetpose.getMeasureX();
-        Distance tagy = targetpose.getMeasureY();
-        Distance deltax = tagx.minus(x);
-        Distance deltay = tagy.minus(y);
-        double distance = Math.sqrt(deltax.in(Meters)*deltax.in(Meters)+deltay.in(Meters)*deltay.in(Meters));
+        double distance = currentpose.getTranslation().getDistance(getTargetHub());
         return distance;
     }
 
