@@ -66,6 +66,7 @@ public class TargetCommand extends Command {
         }
         Pose2d targetpose = new Pose2d(driveSubsystem.getTargetHub(), new Rotation2d());
         Pose2d currentpose = driveSubsystem.getPose();
+        currentpose = currentpose.transformBy(shooterTransform);
         Rotation2d ang = currentpose.getRotation();
         Distance y = currentpose.getMeasureY();
         Distance x = currentpose.getMeasureX();

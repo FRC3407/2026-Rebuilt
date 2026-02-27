@@ -83,7 +83,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     // config variable for pathplanner
     private final RobotConfig config;
-
     /**
      * SmartDashboard widget for displaying gyro angle.
      */
