@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,7 +18,6 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -38,8 +36,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.PathfindingConstants.Blue_hub_pose;
+import static frc.robot.Constants.PathfindingConstants.Red_hub_pose;
 import frc.robot.RobotContainer;
-import static frc.robot.Constants.TargetConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -170,18 +169,18 @@ public class DriveSubsystem extends SubsystemBase {
         return m_odometry.getEstimatedPosition();
     }
 
-    public Translation2d getTargetHub() {
+    public Pose2d getTargetHubPose() {
         if (isRedAlliance()) {
-            return Red_hub;
+            return Red_hub_pose;
         } else {
-            return Blue_hub;
+            return Blue_hub_pose;
         }
     }
 
     /** @return distance in meters*/
     public double distanceToHub(){
         Pose2d currentpose = getPose();
-        double distance = currentpose.getTranslation().getDistance(getTargetHub());
+        double distance = currentpose.getTranslation().getDistance(getTargetHubPose().getTranslation());
         return distance;
     }
 

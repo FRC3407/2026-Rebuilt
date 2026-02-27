@@ -4,21 +4,23 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Meter;
-import static frc.robot.Constants.TargetConstants.*;
-
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import static edu.wpi.first.units.Units.Meter;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
+import static frc.robot.Constants.TargetConstants.Derivative;
+import static frc.robot.Constants.TargetConstants.Integral;
+import static frc.robot.Constants.TargetConstants.Proportional;
+import static frc.robot.Constants.TargetConstants.shooterTransform;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** Hub targeting command {@code DriveSubystem} using right joystick only */
@@ -62,7 +64,7 @@ public class TargetCommand extends Command {
             ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
             xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
         }
-        Pose2d targetpose = new Pose2d(driveSubsystem.getTargetHub(), new Rotation2d());
+        Pose2d targetpose = driveSubsystem.getTargetHubPose();
         Pose2d currentpose = driveSubsystem.getPose();
         currentpose = currentpose.transformBy(shooterTransform);
         Rotation2d ang = currentpose.getRotation();
