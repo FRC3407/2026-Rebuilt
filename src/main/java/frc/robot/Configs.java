@@ -57,4 +57,20 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
+    public static final class ShooterConfig{
+        public static final SparkMaxConfig kShooterConfig = new SparkMaxConfig();
+                static {
+                        kShooterConfig
+                                        .idleMode(IdleMode.kCoast)
+                                        .openLoopRampRate(0.05)
+                                        .smartCurrentLimit(10, 20);
+        }
+        public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
+                static {
+                        kSpindexerConfig
+                                        .idleMode(IdleMode.kCoast)
+                                        .openLoopRampRate(0.05)
+                                        .smartCurrentLimit(10, 20);
+        }
+    }
 }
