@@ -5,9 +5,7 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meter;
-import static frc.robot.Constants.TargetConstants.Derivative;
-import static frc.robot.Constants.TargetConstants.Integral;
-import static frc.robot.Constants.TargetConstants.Proportional;
+import static frc.robot.Constants.TargetConstants.*;
 
 import java.util.function.DoubleSupplier;
 
