@@ -23,6 +23,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
@@ -88,6 +89,9 @@ public class RobotContainer{
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
+
+        //For convenience in testing each command has a joystick and xbox version. By default the xbox is commented out.
+
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
@@ -104,6 +108,13 @@ public class RobotContainer{
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
+        leftJoystick.trigger().whileTrue(new PointCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                leftJoystick::getX,
+                leftJoystick::getY, 
+                m_robotDrive));
+        
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
