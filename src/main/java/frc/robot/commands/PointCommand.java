@@ -76,9 +76,9 @@ public class PointCommand extends Command {
 
     @Override
     public void execute() {
-        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        double rot = MathUtil.clamp(pointPID.calculate(joystickDifference(), 0), -1, 1);
+        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -0.5;
+        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -0.5;
+        double rot = MathUtil.clamp(pointPID.calculate(joystickDifference(), 0), -1, 1) * 0.5;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
 }
