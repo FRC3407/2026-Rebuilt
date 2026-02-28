@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
         // This must be called from the robot's periodic block in order for anything in
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -72,11 +74,11 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
+
         Elastic.selectTab("Autonomous");
     }
 
@@ -100,6 +102,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+
     }
 
     @Override
