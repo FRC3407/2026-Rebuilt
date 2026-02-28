@@ -6,22 +6,24 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PointCommand;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -34,6 +36,8 @@ public class RobotContainer {
     // The robot's subsystems
     public final DriveSubsystem m_robotDrive;
     public final VisionSubsystem m_vision;
+    public final BeeperSubsystem m_beeper;
+    public final ShooterSubsystem m_shooter;
 
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
@@ -59,6 +63,8 @@ public class RobotContainer {
     private RobotContainer() {
         m_robotDrive = new DriveSubsystem();
         m_vision = new VisionSubsystem(m_robotDrive);
+        m_beeper = new BeeperSubsystem();
+        m_shooter = new ShooterSubsystem();
 
         configureButtonBindings();
 
@@ -120,7 +126,9 @@ public class RobotContainer {
         
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading));;
+                new InstantCommand(m_robotDrive::zeroHeading));
+
+        xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter,m_robotDrive));
     }
 
     /**

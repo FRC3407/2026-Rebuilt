@@ -20,6 +20,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -37,6 +38,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.RobotContainer;
+import static frc.robot.Constants.TargetConstants.*;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -80,7 +83,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     // config variable for pathplanner
     private final RobotConfig config;
-
     /**
      * SmartDashboard widget for displaying gyro angle.
      */
@@ -169,11 +171,27 @@ public class DriveSubsystem extends SubsystemBase {
         return m_odometry.getEstimatedPosition();
     }
 
+    public Translation2d getTargetHub() {
+        if (isRedAlliance()) {
+            return Red_hub;
+        } else {
+            return Blue_hub;
+        }
+    }
+
+    /** @return distance in meters*/
+    public double distanceToHub(){
+        Pose2d currentpose = getPose();
+        double distance = currentpose.getTranslation().getDistance(getTargetHub());
+        return distance;
+    }
+
     /**
      * Resets the odometry to the specified pose.
      *
      * @param pose The pose to which to set the odometry.
      */
+
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
                 Rotation2d.fromDegrees(getHeading()),
@@ -257,6 +275,7 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void zeroHeading() {
         m_gyro.resetYaw();
+        RobotContainer.getInstance().m_beeper.beep(0.5);
     }
 
     /**
