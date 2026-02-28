@@ -43,7 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /** @param speed speed from -1 to 1 */
     public void setSpindexerSpeed(double speed){
-        m_spindexer.set(speed); 
+        m_spindexer.set(-speed); // spindexer runs backwards when speed is +
     }
 
     public double getShooterSpeed() {
