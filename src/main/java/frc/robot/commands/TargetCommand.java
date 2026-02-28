@@ -55,8 +55,8 @@ public class TargetCommand extends Command {
 
     @Override
     public void execute() {
-        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
+        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -0.5;
+        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -0.5;
         if (RobotBase.isSimulation()) {
             ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
             xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
@@ -74,7 +74,7 @@ public class TargetCommand extends Command {
         Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
         Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
         Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
-        double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
+        double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1) * 0.5;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
 }
