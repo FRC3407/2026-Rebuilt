@@ -27,6 +27,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
+import frc.robot.commands.deployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -101,7 +102,9 @@ public class RobotContainer{
                 rightJoystick::getX,
                 m_robotDrive));
 
-        // leftJoystick.trigger().whileTrue(new IntakeCommand(m_intake, 1));
+        // m_intake.setDefaultCommand(new deployCommand(m_intake));
+
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, 1));
         
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
@@ -135,8 +138,9 @@ public class RobotContainer{
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new ShooterCommand(xboxController::getLeftTriggerAxis, m_shooter));
+        NamedCommands.registerCommand("shoot", new ShooterCommand(()->1.0, m_shooter));
         NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
+        NamedCommands.registerCommand("target", new TargetCommand(()->0.0,() -> 0.0,m_robotDrive));
 
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
         // TODO: configure additional autonomous routines here
