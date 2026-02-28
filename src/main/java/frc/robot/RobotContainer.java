@@ -86,7 +86,6 @@ public class RobotContainer {
 
 
         //For convenience in testing each command has a joystick and xbox version. By default the xbox is commented out.
-        // TODO: Remember to reset to the joysticks after testing.
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
@@ -94,21 +93,10 @@ public class RobotContainer {
                 leftJoystick::getX,
                 m_robotDrive));
 
-        // m_robotDrive.setDefaultCommand(new DriveCommand(
-        //         xboxController::getRightY,
-        //         xboxController::getRightX,
-        //         xboxController::getLeftX,
-        //         m_robotDrive));
-
         rightJoystick.trigger().whileTrue(new TargetCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-
-        // xboxController.rightBumper().whileTrue(new TargetCommand(
-        //         xboxController::getRightY,
-        //         xboxController::getRightX,
-        //         m_robotDrive));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
@@ -116,13 +104,6 @@ public class RobotContainer {
                 leftJoystick::getX,
                 leftJoystick::getY, 
                 m_robotDrive));
-
-        // xboxController.leftBumper().whileTrue(new PointCommand(
-        //         xboxController::getRightY,
-        //         xboxController::getRightX,
-        //         xboxController::getLeftX,
-        //         xboxController::getLeftY,
-        //         m_robotDrive));
         
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
