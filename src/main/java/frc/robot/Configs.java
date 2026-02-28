@@ -64,7 +64,7 @@ public final class Configs {
                         kShooterConfig
                                         .idleMode(IdleMode.kCoast)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20)
+                                        .smartCurrentLimit(40, 40)
                                         .closedLoop.pid(1.0, 0.0, 0.0);
         }
         public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
@@ -72,7 +72,7 @@ public final class Configs {
                         kSpindexerConfig
                                         .idleMode(IdleMode.kCoast)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20);
+                                        .smartCurrentLimit(40, 40);
         }
     }
 
@@ -82,21 +82,21 @@ public final class Configs {
                         kIntakeConfig
                                         .idleMode(IdleMode.kCoast)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20);
+                                        .smartCurrentLimit(40, 40);
                 }
         public static final SparkMaxConfig kDeployLeftConfig = new SparkMaxConfig();
                 static {
                         kDeployLeftConfig
                                         .idleMode(IdleMode.kBrake)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20);
+                                        .smartCurrentLimit(40, 40);
                 }
         public static final SparkMaxConfig kDeployRightConfig = new SparkMaxConfig();
                 static {
                         kDeployRightConfig
                                         .idleMode(IdleMode.kBrake)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20);
+                                        .smartCurrentLimit(40, 40);
                 }
     }
 }
