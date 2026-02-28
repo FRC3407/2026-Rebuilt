@@ -104,13 +104,10 @@ public class RobotContainer{
 
         // m_intake.setDefaultCommand(new deployCommand(m_intake));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, 1));
+       
         
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
-        
-        xboxController.x().whileTrue(
-            new IntakeCommand(m_intake, 0.5));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
@@ -119,7 +116,7 @@ public class RobotContainer{
                 leftJoystick::getY, 
                 m_robotDrive));
         
-
+        
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
@@ -127,6 +124,12 @@ public class RobotContainer{
 
         m_shooter.setDefaultCommand(new ShooterCommand(
             xboxController::getRightTriggerAxis, 
+            m_shooter));
+
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, 1));
+
+        xboxController.rightBumper().whileTrue(new ShooterCommand(
+            () -> -1,
             m_shooter));
     }
 
