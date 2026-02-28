@@ -115,8 +115,8 @@ public class RobotContainer{
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
-        xboxController.rightTrigger().whileTrue(new ShooterCommand(
-            xboxController::getRightTriggerAxis,
+        m_shooter.setDefaultCommand(new ShooterCommand(
+            xboxController::getRightTriggerAxis, 
             m_shooter));
     }
 
