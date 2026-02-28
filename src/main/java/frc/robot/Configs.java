@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.ModuleConstants;
@@ -58,12 +59,13 @@ public final class Configs {
         }
     }
     public static final class ShooterConfig{
-        public static final SparkMaxConfig kShooterConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig kShooterConfig = new SparkFlexConfig();
                 static {
                         kShooterConfig
                                         .idleMode(IdleMode.kCoast)
                                         .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(10, 20);
+                                        .smartCurrentLimit(10, 20)
+                                        .closedLoop.pid(1.0, 0.0, 0.0);
         }
         public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
                 static {
