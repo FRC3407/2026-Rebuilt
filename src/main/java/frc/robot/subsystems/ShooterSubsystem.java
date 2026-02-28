@@ -19,8 +19,8 @@ import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private SparkMax m_spindexer = new SparkMax(ShooterConstants.kSpindexerCanId,MotorType.kBrushless);
-    private SparkFlex m_shooter = new SparkFlex(ShooterConstants.kShooterCanId,MotorType.kBrushless);
+    private SparkMax m_spindexer = new SparkMax(ShooterConstants.kSpindexerCanId, MotorType.kBrushless);
+    private SparkFlex m_shooter = new SparkFlex(ShooterConstants.kShooterCanId, MotorType.kBrushless);
 
     /** Creates a new ShooterSubsystem. */
     public ShooterSubsystem() {
@@ -36,17 +36,20 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /** @param speed speed from -1 to 1 */
-    public void setShooterSpeed(double speed){
+    public void setShooterSpeed(double speed) {
         m_shooter.set(speed);
         // m_shooter.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
     }
 
     /** @param speed speed from -1 to 1 */
-    public void setSpindexerSpeed(double speed){
+    public void setSpindexerSpeed(double speed) {
         m_spindexer.set(-speed); // spindexer runs backwards when speed is +
     }
 
     public double getShooterSpeed() {
         return m_shooter.get();
+    }
+    public double getSpindexerSpeed() {
+        return m_spindexer.get();
     }
 }

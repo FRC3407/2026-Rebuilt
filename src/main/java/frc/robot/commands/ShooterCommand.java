@@ -25,8 +25,15 @@ public class ShooterCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        shooterSubsystem.setSpindexerSpeed(MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband));
-        shooterSubsystem.setShooterSpeed(MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband));
+        final double howMuchTrigger = MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband);
+        final double minPower = 0.5;
+
+        // faster acceleration with a minimum value :P
+        double finalVal = 0;
+        if (howMuchTrigger != 0) finalVal = minPower + (1 - minPower) * howMuchTrigger;
+        
+        shooterSubsystem.setSpindexerSpeed(finalVal);
+        shooterSubsystem.setShooterSpeed(finalVal);
     }
 
     @Override
@@ -35,5 +42,3 @@ public class ShooterCommand extends Command {
         shooterSubsystem.setSpindexerSpeed(0);
     }
 }
-
-
