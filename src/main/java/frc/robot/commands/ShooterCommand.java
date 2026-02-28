@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterCommand extends Command {
@@ -23,8 +25,8 @@ public class ShooterCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        shooterSubsystem.setSpindexerSpeed(1);
-        shooterSubsystem.setShooterSpeed(triggerAxis.getAsDouble());
+        shooterSubsystem.setSpindexerSpeed(MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband));
+        shooterSubsystem.setShooterSpeed(MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband));
     }
 
     @Override
