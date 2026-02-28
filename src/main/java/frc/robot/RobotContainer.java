@@ -101,7 +101,7 @@ public class RobotContainer{
                 rightJoystick::getX,
                 m_robotDrive));
 
-        // leftJoystick.trigger().whileTrue(new IntakeCommand(m_intake, 1));
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, 1));
         
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
