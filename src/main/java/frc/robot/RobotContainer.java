@@ -22,15 +22,16 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-
-
+import com.pathplanner.lib.auto.NamedCommands;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -44,7 +45,7 @@ public class RobotContainer{
     public final VisionSubsystem m_vision;
     public final BeeperSubsystem m_beeper;
     public final ShooterSubsystem m_shooter;
-
+    public final IntakeSubsystem m_intake;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -68,7 +69,9 @@ public class RobotContainer{
         m_vision = new VisionSubsystem(m_robotDrive);
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
-
+        m_intake = new IntakeSubsystem();
+        NamedCommands.registerCommand("shoot", new ShooterCommand(m_shooter, m_robotDrive));
+        NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
@@ -99,6 +102,9 @@ public class RobotContainer{
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
+
+        leftJoystick.trigger().whileTrue(new IntakeCommand(m_intake, 1));
+        
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 

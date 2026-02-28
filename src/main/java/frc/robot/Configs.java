@@ -75,4 +75,28 @@ public final class Configs {
                                         .smartCurrentLimit(10, 20);
         }
     }
+
+    public static final class IntakeConfig {
+        public static final SparkMaxConfig kIntakeConfig = new SparkMaxConfig();
+                static {
+                        kIntakeConfig
+                                        .idleMode(IdleMode.kCoast)
+                                        .openLoopRampRate(0.05)
+                                        .smartCurrentLimit(10, 20);
+                }
+        public static final SparkMaxConfig kDeployLeftConfig = new SparkMaxConfig();
+                static {
+                        kDeployLeftConfig
+                                        .idleMode(IdleMode.kBrake)
+                                        .openLoopRampRate(0.05)
+                                        .smartCurrentLimit(10, 20);
+                }
+        public static final SparkMaxConfig kDeployRightConfig = new SparkMaxConfig();
+                static {
+                        kDeployRightConfig
+                                        .idleMode(IdleMode.kBrake)
+                                        .openLoopRampRate(0.05)
+                                        .smartCurrentLimit(10, 20);
+                }
+    }
 }
