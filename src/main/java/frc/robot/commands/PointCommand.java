@@ -5,29 +5,35 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meter;
-import static frc.robot.Constants.TargetConstants.*;
 
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import static frc.robot.Constants.TargetConstants.*;
 
 /** Hub targeting command {@code DriveSubystem} using right joystick only */
-public class TargetCommand extends Command {
+public class PointCommand extends Command {
 
     private final DriveSubsystem driveSubsystem;
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
-    private final PIDController targetLockPID = new PIDController(targetProportional, targetIntegral, targetDerivative);
+    private final DoubleSupplier rotStickx;
+    private final DoubleSupplier rotSticky;
+    private final PIDController pointPID = new PIDController(pointProportional, pointIntegral, pointDerivative);
 
     /**
      * Drive the robot using joysticks.
@@ -37,44 +43,42 @@ public class TargetCommand extends Command {
      * @param rotStick      Joystick axis for rotation.
      * @param drive         DriveSubsystem
      */
-    public TargetCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DriveSubsystem drive) {
+    public PointCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStickx,
+            DoubleSupplier rotSticky, DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
+        this.rotStickx = rotStickx;
+        this.rotSticky = rotSticky;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
         SmartDashboard.putData("PID", this);
     }
 
+    private double joystickDifference() {
+        double x = -rotStickx.getAsDouble();
+        double y = rotSticky.getAsDouble();
+
+        Translation2d j = new Translation2d(x, y);
+        Rotation2d jAngle = j.getAngle();
+        Rotation2d bAngle = driveSubsystem.getPose().getRotation();
+        double jb = jAngle.minus(bAngle).getRadians();
+        System.out.println(jb);
+        return MathUtil.applyDeadband(jb, OIConstants.kDriveDeadband);
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
-        builder.addDoubleProperty("Proportional", () -> targetLockPID.getP(), (p) -> targetLockPID.setP(p));
-        builder.addDoubleProperty("Integral", () -> targetLockPID.getI(), (i) -> targetLockPID.setI(i));
-        builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
+        builder.addDoubleProperty("Proportional", () -> pointPID.getP(), (p) -> pointPID.setP(p));
+        builder.addDoubleProperty("Integral", () -> pointPID.getI(), (i) -> pointPID.setI(i));
+        builder.addDoubleProperty("Derivative", () -> pointPID.getD(), (d) -> pointPID.setD(d));
     }
 
     @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-        if (RobotBase.isSimulation()) {
-            ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
-            xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble(), OIConstants.kDriveDeadband);
-        }
-        Pose2d targetpose = new Pose2d(driveSubsystem.getAllianceRelative(Red_hub, Blue_hub), new Rotation2d());
-        Pose2d currentpose = driveSubsystem.getPose();
-        currentpose = currentpose.transformBy(shooterTransform);
-        Rotation2d ang = currentpose.getRotation();
-        Distance y = currentpose.getMeasureY();
-        Distance x = currentpose.getMeasureX();
-        Distance tagx = targetpose.getMeasureX();
-        Distance tagy = targetpose.getMeasureY();
-        Distance deltax = tagx.minus(x);
-        Distance deltay = tagy.minus(y);
-        Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
-        Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
-        Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
-        double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
+        double rot = MathUtil.clamp(pointPID.calculate(joystickDifference(), 0), -1, 1);
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
 }
