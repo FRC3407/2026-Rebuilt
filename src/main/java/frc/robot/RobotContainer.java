@@ -126,7 +126,7 @@ public class RobotContainer{
             xboxController::getRightTriggerAxis, 
             m_shooter));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, 1));
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -1));
 
         xboxController.rightBumper().whileTrue(new ShooterCommand(
             () -> -1,
