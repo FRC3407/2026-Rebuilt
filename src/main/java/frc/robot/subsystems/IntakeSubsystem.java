@@ -21,9 +21,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final SparkMax m_intakeMotor = new SparkMax(IntakeConstants.kIntakeCanId, MotorType.kBrushless);
     private final SparkMax m_deployMotor = new SparkMax(IntakeConstants.kDeployLeftCanId, MotorType.kBrushless);
-    private final PIDController m_control = new PIDController(1, 0, 0); // find good pid values
+    private final PIDController m_control = new PIDController(1, 0, 0); // TODO: find good pid values
     private RelativeEncoder m_Encoder = m_deployMotor.getEncoder();
-    private double set_point = 0; //use encoders and find out correct value later
+    private double set_point = 0; // TODO: use encoders and find out correct value later
     private boolean isDeploying;
     /** Creates a new IntakeSubsystem. */
     public IntakeSubsystem() {
