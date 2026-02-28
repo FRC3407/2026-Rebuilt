@@ -109,11 +109,15 @@ public class RobotContainer{
                 leftJoystick::getY, 
                 m_robotDrive));
         
+
+
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
-        xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter,m_robotDrive));
+        xboxController.rightTrigger().whileTrue(new ShooterCommand(
+            xboxController::getRightTriggerAxis,
+            m_shooter));
     }
 
     /**
