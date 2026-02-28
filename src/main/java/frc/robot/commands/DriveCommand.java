@@ -45,6 +45,5 @@ public class DriveCommand extends Command {
         double rot = MathUtil.applyDeadband(rotStick.getAsDouble(), OIConstants.kDriveDeadband) * -1;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
 
-
     }
 }

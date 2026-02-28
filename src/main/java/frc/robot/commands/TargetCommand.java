@@ -33,7 +33,6 @@ public class TargetCommand extends Command {
     private final DoubleSupplier sidewaysStick;
     private final PIDController targetLockPID = new PIDController(targetProportional, targetIntegral, targetDerivative);
 
-
     /**
      * Drive the robot using joysticks.
      * 

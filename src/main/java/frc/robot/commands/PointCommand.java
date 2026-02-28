@@ -35,7 +35,6 @@ public class PointCommand extends Command {
     private final DoubleSupplier rotSticky;
     private final PIDController pointPID = new PIDController(pointProportional, pointIntegral, pointDerivative);
 
-
     /**
      * Drive the robot using joysticks.
      * 
@@ -44,7 +43,8 @@ public class PointCommand extends Command {
      * @param rotStick      Joystick axis for rotation.
      * @param drive         DriveSubsystem
      */
-    public PointCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStickx, DoubleSupplier rotSticky, DriveSubsystem drive) {
+    public PointCommand(DoubleSupplier forwardStick, DoubleSupplier sidewaysStick, DoubleSupplier rotStickx,
+            DoubleSupplier rotSticky, DriveSubsystem drive) {
         this.forwardStick = forwardStick;
         this.sidewaysStick = sidewaysStick;
         this.rotStickx = rotStickx;
