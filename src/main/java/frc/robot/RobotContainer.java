@@ -135,7 +135,7 @@ public class RobotContainer{
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new ShooterCommand(xboxController::getLeftTriggerAxis, m_shooter));
+        NamedCommands.registerCommand("shoot", new ShooterCommand(()->1.0, m_shooter));
         NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
         NamedCommands.registerCommand("target", new TargetCommand(()->0.0,() -> 0.0,m_robotDrive));
 
