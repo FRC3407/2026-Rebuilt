@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,10 +38,15 @@ public class ShooterSubsystem extends SubsystemBase {
     /** @param speed speed from -1 to 1 */
     public void setShooterSpeed(double speed){
         m_shooter.set(speed);
+        // m_shooter.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
     }
 
     /** @param speed speed from -1 to 1 */
     public void setSpindexerSpeed(double speed){
         m_spindexer.set(speed); 
+    }
+
+    public double getShooterSpeed() {
+        return m_shooter.get();
     }
 }

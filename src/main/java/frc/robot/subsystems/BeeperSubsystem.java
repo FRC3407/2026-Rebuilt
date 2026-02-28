@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BeeperSubsystem extends SubsystemBase {
 
-    private final DigitalOutput output = new DigitalOutput(0);
+    private final DigitalOutput output = new DigitalOutput(3);
     private double secondsRemaining;
 
     @Override
