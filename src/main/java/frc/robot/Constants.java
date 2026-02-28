@@ -110,9 +110,9 @@ public final class Constants {
         public static final double pointProportional = 0.15;
         public static final double pointIntegral = 0;
         public static final double pointDerivative = 0.011;
-        public static final Translation2d Blue_hub = new Translation2d(4.625,4.035);
+        public static final Translation2d Blue_hub = new Translation2d(4.625, 4.035);
         public static final Translation2d Red_hub = new Translation2d(16.54 - 4.625, 4.035);
-        public static final Transform2d shooterTransform = new Transform2d(.5,0, Rotation2d.fromDegrees(-90));
+        public static final Transform2d shooterTransform = new Transform2d(-0.2, 0, Rotation2d.fromDegrees(-90));
     }
     public static final class PathfindingConstants{
         public static final Pose2d Blue_hub_pose = new Pose2d(3.625, 4.035, new Rotation2d());
