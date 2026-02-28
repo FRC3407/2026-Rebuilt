@@ -6,9 +6,10 @@ package frc.robot;
 
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,13 +26,12 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
-import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.commands.TargetCommand;
+import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import com.pathplanner.lib.auto.NamedCommands;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -70,8 +70,6 @@ public class RobotContainer{
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
-        NamedCommands.registerCommand("shoot", new ShooterCommand(m_shooter, m_robotDrive));
-        NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
@@ -134,7 +132,9 @@ public class RobotContainer{
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        // TODO: register NamedCommands here
+        NamedCommands.registerCommand("shoot", new ShooterCommand(xboxController::getLeftTriggerAxis, m_shooter));
+        NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
+
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
         // TODO: configure additional autonomous routines here
         return chooser;
