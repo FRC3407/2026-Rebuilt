@@ -120,9 +120,6 @@ public class RobotContainer{
                 new InstantCommand(m_robotDrive::zeroHeading));
 
         xboxController.rightTrigger().whileTrue(new ShooterCommand(m_shooter,m_robotDrive));
-        if (xboxController.a().getAsBoolean()){
-        
-        }
     }
 
     /**

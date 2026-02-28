@@ -39,7 +39,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         if(isDeploying){
-            double motor_speed = MathUtil.clamp(-0.1 + m_control.calculate(m_Encoder.getPosition(), set_point), -1.0,1.0);
+            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -1.0,1.0);
             m_deployMotor.set(motor_speed);
         }
         if (m_Encoder.getPosition() >= set_point){
