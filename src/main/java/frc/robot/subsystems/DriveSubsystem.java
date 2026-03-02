@@ -108,6 +108,8 @@ public class DriveSubsystem extends SubsystemBase {
      */
     private final StructPublisher<Pose2d> odometryLogger;
 
+    private SwerveModuleState[] m_swerveModuleStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
+
     // Simulated Gryo
     private Rotation2d m_simGyroAngle = Rotation2d.fromDegrees(0);
     private double m_simGyroRate;
@@ -256,6 +258,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_rearLeft.setDesiredState(swerveModuleStates[2]);
         m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+        m_swerveModuleStates = swerveModuleStates;
     }
 
     /**
@@ -384,6 +388,15 @@ public class DriveSubsystem extends SubsystemBase {
         builder.addDoubleProperty("Front Right Angle", () -> m_frontRight.getState().angle.getDegrees(), null);
         builder.addDoubleProperty("Rear Left Angle", () -> m_rearLeft.getState().angle.getDegrees(), null);
         builder.addDoubleProperty("Rear Right Angle", () -> m_rearRight.getState().angle.getDegrees(), null);
+
+        builder.addDoubleProperty("Desired Front Left Speed", () -> m_swerveModuleStates[0].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Front Right Speed", () -> m_swerveModuleStates[1].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Rear Left Speed", () -> m_swerveModuleStates[2].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Rear Right Speed", () -> m_swerveModuleStates[3].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Front Left Angle", () -> m_swerveModuleStates[0].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Front Right Angle", () -> m_swerveModuleStates[1].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Rear Left Angle", () -> m_swerveModuleStates[2].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Rear Right Angle", () -> m_swerveModuleStates[3].angle.getDegrees(), null);
     }
 
 }
