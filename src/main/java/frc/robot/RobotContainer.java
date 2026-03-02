@@ -76,7 +76,7 @@ public class RobotContainer {
         autoChooser = configureAutonomous();
         configureButtonBindings();
         configureDashboard();
-        if(Robot.isSimulation()) {
+        if (Robot.isSimulation()) {
             configureSimulation();
         }
     }
@@ -95,60 +95,32 @@ public class RobotContainer {
         // For convenience in testing each command has a joystick and xbox version. By
         // default the xbox is commented out.
 
-        if (Robot.isReal()) {
+        m_robotDrive.setDefaultCommand(new DriveCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                leftJoystick::getX,
+                m_robotDrive));
 
-            m_robotDrive.setDefaultCommand(new DriveCommand(
-                    rightJoystick::getY,
-                    rightJoystick::getX,
-                    leftJoystick::getX,
-                    m_robotDrive));
-
-            rightJoystick.trigger().whileTrue(new TargetCommand(
-                    rightJoystick::getY,
-                    rightJoystick::getX,
-                    m_robotDrive));
-        } else {
-            m_robotDrive.setDefaultCommand(new DriveCommand(
-                    xboxController::getLeftY,
-                    xboxController::getLeftX,
-                    xboxController::getRightX,
-                    m_robotDrive));
-
-            xboxController.x().whileTrue(new TargetCommand(
-                    xboxController::getLeftY,
-                    xboxController::getLeftX,
-                    m_robotDrive));
-        }
+        rightJoystick.trigger().whileTrue(new TargetCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                m_robotDrive));
         // m_intake.setDefaultCommand(new deployCommand(m_intake));
 
         xboxController.a().onTrue(
                 new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
                         PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
-        if (Robot.isReal()) {
-            leftJoystick.trigger().whileTrue(new PointCommand(
-                    rightJoystick::getY,
-                    rightJoystick::getX,
-                    leftJoystick::getX,
-                    leftJoystick::getY,
-                    m_robotDrive));
+        leftJoystick.trigger().whileTrue(new PointCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                leftJoystick::getX,
+                leftJoystick::getY,
+                m_robotDrive));
 
-            // Button 7 on the right stick resets the gyro
-            rightJoystick.button(7).onTrue(
-                    new InstantCommand(m_robotDrive::zeroHeading));
-
-        } else {
-            xboxController.leftBumper().whileTrue(new PointCommand(
-                    xboxController::getLeftY,
-                    xboxController::getLeftX,
-                    xboxController::getRightX,
-                    xboxController::getRightY,
-                    m_robotDrive));
-
-            // Y button on xbox controller resets the gyro
-            xboxController.y().onTrue(
-                    new InstantCommand(m_robotDrive::zeroHeading));
-        }
+        // Button 7 on the right stick resets the gyro
+        rightJoystick.button(7).onTrue(
+                new InstantCommand(m_robotDrive::zeroHeading));
 
         m_shooter.setDefaultCommand(new ShooterCommand(
                 xboxController::getRightTriggerAxis,
@@ -162,8 +134,32 @@ public class RobotContainer {
     }
 
     private void configureSimulation() {
-        //Start the robot in an orientation that will make it easier to drive in simulation.
+        // Start the robot in an orientation that will make it easier to drive in
+        // simulation.
         m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
+
+        // Set up simulation specific controls.
+        xboxController.leftBumper().whileTrue(new PointCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                xboxController::getRightX,
+                xboxController::getRightY,
+                m_robotDrive));
+
+        // Y button on xbox controller resets the gyro
+        xboxController.y().onTrue(
+                new InstantCommand(m_robotDrive::zeroHeading));
+
+        m_robotDrive.setDefaultCommand(new DriveCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                xboxController::getRightX,
+                m_robotDrive));
+
+        xboxController.x().whileTrue(new TargetCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                m_robotDrive));
     }
 
     /**
