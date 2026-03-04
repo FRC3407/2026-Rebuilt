@@ -96,7 +96,12 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-        Elastic.selectTab("Teleoperated");
+        if (RobotContainer.getInstance().m_robotDrive.isRedAlliance()){
+            Elastic.selectTab("Teleoperated Red");
+        } else {
+            Elastic.selectTab("Teleoperated Blue");
+        }
+        
     }
 
     /** This function is called periodically during operator control. */

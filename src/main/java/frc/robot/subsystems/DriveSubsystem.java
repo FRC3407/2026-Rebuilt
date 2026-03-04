@@ -129,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
                 this);
     }
 
-    private boolean isRedAlliance() {
+    public boolean isRedAlliance() {
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
