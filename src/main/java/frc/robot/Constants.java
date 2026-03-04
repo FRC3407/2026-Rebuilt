@@ -148,10 +148,14 @@ public final class Constants {
     }
 
     public static final class ShooterConstants {
-        /** Vortex motor*/
-        public static final int kShooterCanId = 16;
-        /** Neo motor*/
-        public static final int kSpindexerCanId = 13;
+        public static final int kShooterCanId = 16; // vortex motor
+        public static final int kSpindexerCanId = 13; // neo motor
+
+        public static final double launcherHeight = Units.inchesToMeters(40); // approximate, get better measurements
+        public static final double launchAngle = Math.atan2(4.5, 2.25); // also approximate, get better measurements
+        public static final double hubHeight = Units.inchesToMeters(72);
+        public static final double hubDiameter = Units.inchesToMeters(41.7); // MINIMUM diameter of the hub funnel
+        public static final double hubRadius = hubDiameter / 2;
     }
 
     public static final class IntakeConstants {

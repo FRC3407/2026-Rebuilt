@@ -129,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
                 this);
     }
 
-    private boolean isRedAlliance() {
+    public boolean isRedAlliance() {
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
@@ -158,7 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
                 });
 
         gyroDisplay.setNumber(getHeading());
-        // voltageDisplay.setNumber(powerDistribution.getVoltage());
+        voltageDisplay.setNumber(powerDistribution.getVoltage());
         odometryDisplay.setRobotPose(updatedPose);
         odometryLogger.set(getPose());
     }
