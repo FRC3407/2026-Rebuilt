@@ -158,7 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
                 });
 
         gyroDisplay.setNumber(getHeading());
-        // voltageDisplay.setNumber(powerDistribution.getVoltage());
+        voltageDisplay.setNumber(powerDistribution.getVoltage());
         odometryDisplay.setRobotPose(updatedPose);
         odometryLogger.set(getPose());
     }
