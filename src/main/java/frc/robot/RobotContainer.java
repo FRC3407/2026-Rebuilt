@@ -3,14 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-
-
 import java.util.Set;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,13 +32,14 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer{
+public class RobotContainer {
 
     // The robot's subsystems
     public final DriveSubsystem m_robotDrive;
@@ -54,6 +54,7 @@ public class RobotContainer{
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
+
     public static synchronized RobotContainer getInstance() {
         if (instance == null) {
             instance = new RobotContainer();
@@ -75,6 +76,9 @@ public class RobotContainer{
         autoChooser = configureAutonomous();
         configureButtonBindings();
         configureDashboard();
+        if (Robot.isSimulation()) {
+            configureSimulation();
+        }
     }
 
     /**
@@ -88,8 +92,8 @@ public class RobotContainer{
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
-
-        //For convenience in testing each command has a joystick and xbox version. By default the xbox is commented out.
+        // For convenience in testing each command has a joystick and xbox version. By
+        // default the xbox is commented out.
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
@@ -101,36 +105,61 @@ public class RobotContainer{
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-
         // m_intake.setDefaultCommand(new deployCommand(m_intake));
 
-       
-        
         xboxController.a().onTrue(
-            new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
+                new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
+                        PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
-                leftJoystick::getY, 
+                leftJoystick::getY,
                 m_robotDrive));
-        
-        
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
         m_shooter.setDefaultCommand(new ShooterCommand(
-            xboxController::getRightTriggerAxis, 
-            m_shooter));
+                xboxController::getRightTriggerAxis,
+                m_shooter));
 
         xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -1));
 
         xboxController.rightBumper().whileTrue(new ShooterCommand(
-            () -> -1,
-            m_shooter));
+                () -> -1,
+                m_shooter));
+    }
+
+    private void configureSimulation() {
+        // Start the robot in an orientation that will make it easier to drive in
+        // simulation.
+        m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
+
+        // Set up simulation specific controls.
+        xboxController.leftBumper().whileTrue(new PointCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                xboxController::getRightX,
+                xboxController::getRightY,
+                m_robotDrive));
+
+        // Y button on xbox controller resets the gyro
+        xboxController.y().onTrue(
+                new InstantCommand(m_robotDrive::zeroHeading));
+
+        m_robotDrive.setDefaultCommand(new DriveCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                xboxController::getRightX,
+                m_robotDrive));
+
+        xboxController.x().whileTrue(new TargetCommand(
+                xboxController::getLeftY,
+                xboxController::getLeftX,
+                m_robotDrive));
     }
 
     /**
@@ -141,9 +170,9 @@ public class RobotContainer{
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new ShooterCommand(()->1.0, m_shooter));
+        NamedCommands.registerCommand("shoot", new ShooterCommand(() -> 1.0, m_shooter));
         NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
-        NamedCommands.registerCommand("target", new TargetCommand(()->0.0,() -> 0.0,m_robotDrive));
+        NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
 
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
         // TODO: configure additional autonomous routines here

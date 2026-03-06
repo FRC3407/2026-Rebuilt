@@ -28,6 +28,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -37,6 +38,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.Constants.TargetConstants;
@@ -106,6 +108,8 @@ public class DriveSubsystem extends SubsystemBase {
      */
     private final StructPublisher<Pose2d> odometryLogger;
 
+    private SwerveModuleState[] m_swerveModuleStates = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
+
     // Simulated Gryo
     private Rotation2d m_simGyroAngle = Rotation2d.fromDegrees(0);
     private double m_simGyroRate;
@@ -127,6 +131,8 @@ public class DriveSubsystem extends SubsystemBase {
                 config,
                 this::isRedAlliance,
                 this);
+
+        SmartDashboard.putData("DriveSubsystem", this);
     }
 
     public boolean isRedAlliance() {
@@ -252,6 +258,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_frontRight.setDesiredState(swerveModuleStates[1]);
         m_rearLeft.setDesiredState(swerveModuleStates[2]);
         m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+        m_swerveModuleStates = swerveModuleStates;
     }
 
     /**
@@ -294,6 +302,11 @@ public class DriveSubsystem extends SubsystemBase {
     public void zeroHeading() {
         m_gyro.resetYaw();
         RobotContainer.getInstance().m_beeper.beep(0.5);
+        if(Robot.isSimulation()) {
+            m_simGyroAngle = Rotation2d.fromDegrees(0);
+            m_simGyroRate = 0;
+            resetOdometry(getPose());
+        }
     }
 
     /**
@@ -362,6 +375,28 @@ public class DriveSubsystem extends SubsystemBase {
         super.simulationPeriodic();
         updateSimEncoders(m_frontLeft, m_frontRight, m_rearLeft, m_rearRight);
         updateGyro();
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addDoubleProperty("Front Left Speed", () -> m_frontLeft.getState().speedMetersPerSecond, null);
+        builder.addDoubleProperty("Front Right Speed", () -> m_frontRight.getState().speedMetersPerSecond, null);
+        builder.addDoubleProperty("Rear Left Speed", () -> m_rearLeft.getState().speedMetersPerSecond, null);
+        builder.addDoubleProperty("Rear Right Speed", () -> m_rearRight.getState().speedMetersPerSecond, null);
+        builder.addDoubleProperty("Front Left Angle", () -> m_frontLeft.getState().angle.getDegrees(), null);
+        builder.addDoubleProperty("Front Right Angle", () -> m_frontRight.getState().angle.getDegrees(), null);
+        builder.addDoubleProperty("Rear Left Angle", () -> m_rearLeft.getState().angle.getDegrees(), null);
+        builder.addDoubleProperty("Rear Right Angle", () -> m_rearRight.getState().angle.getDegrees(), null);
+
+        builder.addDoubleProperty("Desired Front Left Speed", () -> m_swerveModuleStates[0].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Front Right Speed", () -> m_swerveModuleStates[1].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Rear Left Speed", () -> m_swerveModuleStates[2].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Rear Right Speed", () -> m_swerveModuleStates[3].speedMetersPerSecond, null);
+        builder.addDoubleProperty("Desired Front Left Angle", () -> m_swerveModuleStates[0].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Front Right Angle", () -> m_swerveModuleStates[1].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Rear Left Angle", () -> m_swerveModuleStates[2].angle.getDegrees(), null);
+        builder.addDoubleProperty("Desired Rear Right Angle", () -> m_swerveModuleStates[3].angle.getDegrees(), null);
     }
 
 }

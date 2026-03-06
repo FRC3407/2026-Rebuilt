@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class DriveSubsystemTest {
@@ -27,9 +29,15 @@ public class DriveSubsystemTest {
     @Test
     void testGetPose() {
         Pose2d pose2d = driveSubsystem.getPose();
+        Pose2d expectedPose;
+        if(Robot.isSimulation()) {
+            expectedPose = new Pose2d(2, 2, Rotation2d.fromDegrees(90));
+        } else {
+            expectedPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        }
         assertNotNull(pose2d);
-        assertEquals(pose2d.getTranslation().getX(), 0.0, "Initial X position should be 0.0");
-        assertEquals(pose2d.getTranslation().getY(), 0.0, "Initial Y position should be 0.0");
-        assertEquals(pose2d.getRotation().getDegrees(), 0.0, "Initial rotation should be 0.0 degrees");
+        assertEquals(pose2d.getTranslation().getX(), expectedPose.getX(), "Initial X position should be 0.0");
+        assertEquals(pose2d.getTranslation().getY(), expectedPose.getY(), "Initial Y position should be 0.0");
+        assertEquals(pose2d.getRotation().getDegrees(), expectedPose.getRotation().getDegrees(), "Initial rotation should be 0.0 degrees");
     }
 }
