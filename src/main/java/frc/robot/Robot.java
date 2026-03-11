@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 
-        initLogging();
+        loggingInit();
     }
 
     /**
@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
     }
 
-    private void initLogging() {
+    private void loggingInit() {
         if (isReal()) {
             DataLogManager.start();
             DataLogManager.logNetworkTables(true);

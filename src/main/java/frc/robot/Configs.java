@@ -32,8 +32,7 @@ public final class Configs {
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     // These are example gains you may need to them for your own robot!
                     .pid(0.3, 0, 0)
-                    .outputRange(-1, 1)
-                    .feedForward.kV(drivingVelocityFeedForward);
+                    .outputRange(-1, 1).feedForward.kV(drivingVelocityFeedForward);
 
             turningConfig
                     .idleMode(IdleMode.kBrake)
@@ -58,45 +57,45 @@ public final class Configs {
                     .positionWrappingInputRange(0, turningFactor);
         }
     }
-    public static final class ShooterConfig{
+
+    public static final class ShooterConfig {
         public static final SparkFlexConfig kShooterConfig = new SparkFlexConfig();
-                static {
-                        kShooterConfig
-                                        .idleMode(IdleMode.kCoast)
-                                        .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(40, 40)
-                                        .closedLoop.pid(1.0, 0.0, 0.0);
+        static {
+            kShooterConfig
+                    .idleMode(IdleMode.kCoast)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40).closedLoop.pid(1.0, 0.0, 0.0);
         }
         public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
-                static {
-                        kSpindexerConfig
-                                        .idleMode(IdleMode.kCoast)
-                                        .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(40, 40);
+        static {
+            kSpindexerConfig
+                    .idleMode(IdleMode.kCoast)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
         }
     }
 
     public static final class IntakeConfig {
         public static final SparkMaxConfig kIntakeConfig = new SparkMaxConfig();
-                static {
-                        kIntakeConfig
-                                        .idleMode(IdleMode.kCoast)
-                                        .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(40, 40);
-                }
+        static {
+            kIntakeConfig
+                    .idleMode(IdleMode.kCoast)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
+        }
         public static final SparkMaxConfig kDeployLeftConfig = new SparkMaxConfig();
-                static {
-                        kDeployLeftConfig
-                                        .idleMode(IdleMode.kBrake)
-                                        .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(40, 40);
-                }
+        static {
+            kDeployLeftConfig
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
+        }
         public static final SparkMaxConfig kDeployRightConfig = new SparkMaxConfig();
-                static {
-                        kDeployRightConfig
-                                        .idleMode(IdleMode.kBrake)
-                                        .openLoopRampRate(0.05)
-                                        .smartCurrentLimit(40, 40);
-                }
+        static {
+            kDeployRightConfig
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
+        }
     }
 }
