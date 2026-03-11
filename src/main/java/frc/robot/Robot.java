@@ -130,11 +130,11 @@ public class Robot extends TimedRobot {
             DataLogManager.start();
             DataLogManager.logNetworkTables(true);
         } else if (isSimulation()) {
-            final File logsDir = new File("logs");
-            if (!logsDir.exists()) {
-                logsDir.mkdirs();
+            final File logDir = new File(Filesystem.getOperatingDirectory(), "logs");
+            if (!logDir.exists()) {
+                logDir.mkdirs();
             }
-            DataLogManager.start(logsDir.getAbsolutePath());
+            DataLogManager.start(logDir.getPath());
             DataLogManager.logNetworkTables(true);
         }
     }
