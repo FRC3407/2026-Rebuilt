@@ -15,6 +15,7 @@ public class ShooterCommand extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
     private final DoubleSupplier triggerAxis;
+
     /** Creates a new ShooterCommand. */
     public ShooterCommand(DoubleSupplier triggerAxis, ShooterSubsystem m_shooter) {
         this.triggerAxis = triggerAxis;
@@ -26,11 +27,10 @@ public class ShooterCommand extends Command {
     @Override
     public void execute() {
         final double howMuchTrigger = MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband);
-        final double minPower = 0.5;
 
         // faster acceleration with a minimum value :P
         double finalVal = 0;
-        if (howMuchTrigger != 0) finalVal = minPower + (1 - minPower) * howMuchTrigger;
+        if (howMuchTrigger != 0) finalVal = howMuchTrigger;
         
         shooterSubsystem.setSpindexerSpeed(finalVal);
         shooterSubsystem.setShooterSpeed(finalVal);

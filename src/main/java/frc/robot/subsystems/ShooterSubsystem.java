@@ -8,19 +8,29 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkRelativeEncoder;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.ShooterConfig;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VortexMotorConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
     private SparkMax m_spindexer = new SparkMax(ShooterConstants.kSpindexerCanId, MotorType.kBrushless);
     private SparkFlex m_shooter = new SparkFlex(ShooterConstants.kShooterCanId, MotorType.kBrushless);
+
+    private RelativeEncoder m_shooterEncoder = m_shooter.getEncoder();
+
+    private double scalingFactor = 5500;
+    private double targetSpeed;
 
     /** Creates a new ShooterSubsystem. */
     public ShooterSubsystem() {
@@ -28,6 +38,16 @@ public class ShooterSubsystem extends SubsystemBase {
             PersistMode.kPersistParameters);
         m_shooter.configure(ShooterConfig.kShooterConfig, ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
+
+        SmartDashboard.putData(this);
+    }
+    
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addDoubleProperty("motor speed", m_shooterEncoder::getVelocity, null);
+        builder.addDoubleProperty("target speed", () -> targetSpeed, null);
+        builder.addDoubleProperty("rpm scaling factor", () -> scalingFactor, null);
     }
 
     @Override
@@ -37,8 +57,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /** @param speed speed from -1 to 1 */
     public void setShooterSpeed(double speed) {
-        m_shooter.set(speed);
-        // m_shooter.getClosedLoopController().setSetpoint(speed, ControlType.kVelocity);
+        // m_shooter.set(speed);
+        setShooterSpeedRpm(speed * scalingFactor);
+    }
+
+    public void setShooterSpeedRpm(double rpm) {
+        targetSpeed = rpm;
+        if (rpm == 0) {
+            m_shooter.set(0);
+        } else {
+            m_shooter.getClosedLoopController().setSetpoint(rpm, ControlType.kVelocity);
+        }
     }
 
     /** @param speed speed from -1 to 1 */
