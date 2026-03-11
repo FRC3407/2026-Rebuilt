@@ -13,6 +13,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.ShooterConfig;
 import frc.robot.Constants.ShooterConstants;
@@ -33,6 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        SmartDashboard.putNumber("ShooterSubsystem/ShooterSpeed", getShooterSpeed());
     }
 
     /** @param speed speed from -1 to 1 */
