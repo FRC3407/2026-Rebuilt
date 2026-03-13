@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -114,14 +117,16 @@ public final class Constants {
         public static final Translation2d Red_hub = new Translation2d(16.54 - 4.625, 4.035);
         public static final Transform2d shooterTransform = new Transform2d(-0.2, 0, Rotation2d.fromDegrees(-90));
     }
+
     public static final class PathfindingConstants{
         public static final Pose2d Blue_hub_pose = new Pose2d(3.625, 4.035, new Rotation2d());
         public static final Pose2d Red_hub_pose = new Pose2d(16.54 - 3.625, 4.035, new Rotation2d(Math.PI));
         public static final PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
+            3.0, 4.0,
+            Units.degreesToRadians(540), Units.degreesToRadians(720)
+        );
     }
+
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -163,5 +168,16 @@ public final class Constants {
         public static final int kIntakeCanId = 11;
         public static final int kDeployLeftCanId = 15;
         public static final int kDeployRightCanId = 10;
+    }
+
+    public static final class ShooterDataConstants {
+        public static final Map<Double, Double> shooterData = new HashMap<>();
+
+        static {
+            // FILL IN WITH USEFUL DATA LATER!!!
+            shooterData.put(0.0, 0.0);
+        }
+
+
     }
 }
