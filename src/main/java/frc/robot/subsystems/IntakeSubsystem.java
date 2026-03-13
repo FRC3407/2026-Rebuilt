@@ -18,12 +18,13 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
+    private static final double deploySetPoint = 0.0; // TODO: LIKE REALLY TODO: set a real value before using
+    private static final double deploySpeed = 0.1; // TODO: LIKE REALLY TODO: set a real value before using
+
     private final SparkMax m_intakeMotor = new SparkMax(IntakeConstants.kIntakeCanId, MotorType.kBrushless);
     private final SparkMax m_deployMotor = new SparkMax(IntakeConstants.kDeployLeftCanId, MotorType.kBrushless);
-    private final PIDController m_control = new PIDController(1, 0, 0); // TODO: find good pid values
     private RelativeEncoder m_Encoder = m_deployMotor.getEncoder();
-    private double set_point = 0; // TODO: use encoders and find out correct value later
-    private boolean isDeploying;
+    private boolean isDeploying = false;
     /** Creates a new IntakeSubsystem. */
     public IntakeSubsystem() {
         m_intakeMotor.configure(IntakeConfig.kIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -35,15 +36,17 @@ public class IntakeSubsystem extends SubsystemBase {
         // m_rightEncoder.setPosition(0);
     }
 
+    // This method will be called once per scheduler run
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
         if(isDeploying){
-            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -1.0,1.0);
-            m_deployMotor.set(motor_speed);
-        }
-        if (m_Encoder.getPosition() >= set_point){
-            stopDeploy();
+            // run at `deploySpeed` if its not there yet. if it is, then stop.
+            m_deployMotor.set(m_Encoder.getPosition() < deploySetPoint ? deploySpeed : 0);
+            if (m_Encoder.getPosition() >= deploySetPoint)
+                isDeploying = false;
+            // ballerrrrr
+        } else {
+            m_deployMotor.set(0);
         }
 
     }
