@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import java.io.File;
 
 import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +37,8 @@ public class Robot extends TimedRobot {
         m_robotContainer = RobotContainer.getInstance();
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+
+        loggingInit();
     }
 
     /**
@@ -54,7 +58,6 @@ public class Robot extends TimedRobot {
         // This must be called from the robot's periodic block in order for anything in
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
-
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
@@ -96,12 +99,12 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-        if (RobotContainer.getInstance().m_robotDrive.isRedAlliance()){
+        if (RobotContainer.getInstance().m_robotDrive.isRedAlliance()) {
             Elastic.selectTab("Teleoperated Red");
         } else {
             Elastic.selectTab("Teleoperated Blue");
         }
-        
+
     }
 
     /** This function is called periodically during operator control. */
@@ -120,5 +123,19 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
+    }
+
+    private void loggingInit() {
+        if (isReal()) {
+            DataLogManager.start();
+            DataLogManager.logNetworkTables(true);
+        } else if (isSimulation()) {
+            final File logDir = new File(Filesystem.getOperatingDirectory(), "logs");
+            if (!logDir.exists()) {
+                logDir.mkdirs();
+            }
+            DataLogManager.start(logDir.getPath());
+            DataLogManager.logNetworkTables(true);
+        }
     }
 }
