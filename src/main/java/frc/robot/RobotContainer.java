@@ -109,6 +109,19 @@ public class RobotContainer {
                 m_robotDrive
         ));
         
+        leftJoystick.trigger().whileTrue(new PointCommand(
+                rightJoystick::getY,
+                rightJoystick::getX,
+                leftJoystick::getX,
+                leftJoystick::getY, 
+                m_robotDrive
+        ));
+
+        // Button 7 on the right stick resets the gyro
+        rightJoystick.button(7).onTrue(
+                new InstantCommand(m_robotDrive::zeroHeading)
+        );
+
 
         // ================================ INTAKE ================================ //
 
@@ -121,22 +134,7 @@ public class RobotContainer {
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive))
         );
-        
 
-        leftJoystick.trigger().whileTrue(new PointCommand(
-                rightJoystick::getY,
-                rightJoystick::getX,
-                leftJoystick::getX,
-                leftJoystick::getY, 
-                m_robotDrive
-        ));
-        
-
-
-        // Button 7 on the right stick resets the gyro
-        rightJoystick.button(7).onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading)
-        );
 
         // ================================ SHOOTING ================================ //
 
@@ -161,17 +159,20 @@ public class RobotContainer {
                 xboxController::getLeftX,
                 xboxController::getRightX,
                 xboxController::getRightY,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         // Y button on xbox controller resets the gyro
         xboxController.y().onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading));
+                new InstantCommand(m_robotDrive::zeroHeading)
+        );
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 xboxController::getLeftY,
                 xboxController::getLeftX,
                 xboxController::getRightX,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
