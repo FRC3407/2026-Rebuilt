@@ -21,12 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PathfindingConstants;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
-import frc.robot.commands.deployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -92,45 +92,62 @@ public class RobotContainer {
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
-        // For convenience in testing each command has a joystick and xbox version. By
-        // default the xbox is commented out.
+
+        // For convenience in testing each command has a joystick and xbox version. By default the xbox is commented out.
+        // ================================ MOVING THE ROBOT ================================ //
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         rightJoystick.trigger().whileTrue(new TargetCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
-                m_robotDrive));
+                m_robotDrive
+        ));
+        
+
+        // ================================ INTAKE ================================ //
+
         // m_intake.setDefaultCommand(new deployCommand(m_intake));
 
+        xboxController.leftBumper().whileTrue(
+            new IntakeCommand(m_intake, -1)
+        );
+
         xboxController.a().onTrue(
-                new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
-                        PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
+            new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive))
+        );
+        
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
-                leftJoystick::getY,
-                m_robotDrive));
+                leftJoystick::getY, 
+                m_robotDrive
+        ));
+        
+
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading));
+                new InstantCommand(m_robotDrive::zeroHeading)
+        );
+
+        // ================================ SHOOTING ================================ //
 
         m_shooter.setDefaultCommand(new ShooterCommand(
                 xboxController::getRightTriggerAxis,
-                m_shooter));
+                m_shooter
+        ));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -1));
-
-        xboxController.rightBumper().whileTrue(new ShooterCommand(
-                () -> -1,
-                m_shooter));
+        xboxController.rightBumper().onTrue(
+            new AutoShootCommand(m_shooter, m_robotDrive)
+        );
     }
 
     private void configureSimulation() {
@@ -159,7 +176,8 @@ public class RobotContainer {
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
                 xboxController::getLeftX,
-                m_robotDrive));
+                m_robotDrive
+        ));
     }
 
     /**
