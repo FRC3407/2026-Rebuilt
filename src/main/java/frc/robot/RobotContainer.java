@@ -107,7 +107,7 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        xboxController.a().onTrue(new DeployCommand(m_intake, -120).withTimeout(3));
+        xboxController.a().onTrue(new DeployCommand(m_intake, -122).withTimeout(3));
         // go back in
         xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
 
@@ -130,7 +130,7 @@ public class RobotContainer {
                 xboxController::getRightTriggerAxis,
                 m_shooter));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -1));
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -0.67));
 
         xboxController.rightBumper().whileTrue(new ShooterCommand(
                 () -> -1,

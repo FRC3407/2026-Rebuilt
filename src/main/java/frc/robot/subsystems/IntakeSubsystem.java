@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Newton;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -12,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.IntakeConfig;
 import frc.robot.Constants.IntakeConstants;
@@ -27,6 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private double minError = 1;
 
+    private Timer timer = new Timer();
+
     /** Creates a new IntakeSubsystem. */
     public IntakeSubsystem() {
         m_intakeMotor.configure(IntakeConfig.kIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -39,6 +44,9 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double maxSpeed = 0.3;
+        if (timer.hasElapsed(4.0)) {
+            stopDeploy();
+        }
         if (isDeploying) {
             double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -maxSpeed, maxSpeed);
             m_deployMotor.set(motor_speed);
@@ -60,11 +68,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     /** Deploys the intake out */
-    public void startDeploy(){
+    public void startDeploy() {
+        timer.restart();
         isDeploying = true;
     }
 
-    public void stopDeploy(){
+    public void stopDeploy() {
         m_deployMotor.set(0);
         isDeploying = false;
     }
