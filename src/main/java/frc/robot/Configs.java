@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
@@ -61,10 +62,15 @@ public final class Configs {
     public static final class ShooterConfig {
         public static final SparkFlexConfig kShooterConfig = new SparkFlexConfig();
         static {
+            double shooterVelocityFeedForward = 1 / (60 * ShooterConstants.kShooterWheelFreeSpeedRps);
             kShooterConfig
                     .idleMode(IdleMode.kCoast)
                     .openLoopRampRate(0.05)
                     .smartCurrentLimit(40, 40).closedLoop.pid(1.0, 0.0, 0.0);
+          
+            kShooterConfig.closedLoop
+                    .pid(0.0001, 0.0, 0.0)
+                    .feedForward.kV(shooterVelocityFeedForward);
         }
         public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
         static {
