@@ -107,9 +107,9 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        xboxController.a().onTrue(new DeployCommand(m_intake, -120));
+        xboxController.a().onTrue(new DeployCommand(m_intake, -120).withTimeout(3));
         // go back in
-        xboxController.b().onTrue(new DeployCommand(m_intake, 0));
+        xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
 
         // xboxController.a().onTrue(
         //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,

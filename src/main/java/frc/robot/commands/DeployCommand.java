@@ -26,6 +26,5 @@ public class DeployCommand extends InstantCommand {
     @Override
     public void initialize() {
         intakeSubsystem.setSetPoint(setPoint);
-        System.out.println("deploying");
     }
 }

@@ -21,13 +21,11 @@ public class IntakeCommand extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        System.out.println("starting intake");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        System.out.println("intake speed: " + speed);
         intake_Subsystem.setIntakeSpeed(speed);
     }
 

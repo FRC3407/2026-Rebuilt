@@ -38,17 +38,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double maxSpeed = 0.2;
+        double maxSpeed = 0.3;
         if (isDeploying) {
             double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -maxSpeed, maxSpeed);
             m_deployMotor.set(motor_speed);
             if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
-                System.out.println("stopping deployment");
                 stopDeploy();
             }
         }
-        
-        // System.out.println("goal - actual: " + Math.abs(m_Encoder.getPosition() - set_point));
 
     }
 
