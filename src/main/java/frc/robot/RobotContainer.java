@@ -107,7 +107,7 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        xboxController.a().onTrue(new DeployCommand(m_intake, -122).withTimeout(3));
+        xboxController.a().onTrue(new DeployCommand(m_intake, -125).withTimeout(3));
         // go back in
         xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
 
