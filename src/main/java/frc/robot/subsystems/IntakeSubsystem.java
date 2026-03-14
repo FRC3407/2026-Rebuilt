@@ -20,10 +20,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private final SparkMax m_intakeMotor = new SparkMax(IntakeConstants.kIntakeCanId, MotorType.kBrushless);
     private final SparkMax m_deployMotor = new SparkMax(IntakeConstants.kDeployLeftCanId, MotorType.kBrushless);
-    private final PIDController m_control = new PIDController(1, 0, 0); // TODO: find good pid values
+    private final PIDController m_control = new PIDController(0.01, 0, 0); // TODO: find good pid values
     private RelativeEncoder m_Encoder = m_deployMotor.getEncoder();
     private double set_point = 0; // TODO: use encoders and find out correct value later
     private boolean isDeploying;
+
+    private double minError = 1;
+
     /** Creates a new IntakeSubsystem. */
     public IntakeSubsystem() {
         m_intakeMotor.configure(IntakeConfig.kIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -39,10 +42,13 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         if(isDeploying){
-            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -1.0,1.0);
+            // positive = in
+
+            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -0.15, 0.15);
+            // System.out.println("::: set_point=" + set_point + "  : encoder=" + m_Encoder.getPosition() + " : motor_speed=" + motor_speed);
             m_deployMotor.set(motor_speed);
         }
-        if (m_Encoder.getPosition() >= set_point){
+        if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
             stopDeploy();
         }
 
@@ -50,6 +56,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setIntakeSpeed(double speed) {
         m_intakeMotor.set(speed);
+    }
+
+    public void setSetPoint(double point) {
+        set_point = point;
+        startDeploy();
     }
 
 

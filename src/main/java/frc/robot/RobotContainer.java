@@ -26,7 +26,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
-import frc.robot.commands.deployCommand;
+import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -105,11 +105,15 @@ public class RobotContainer {
                 rightJoystick::getY,
                 rightJoystick::getX,
                 m_robotDrive));
-        // m_intake.setDefaultCommand(new deployCommand(m_intake));
+        
+        // -120 is all the way out
+        xboxController.a().onTrue(new DeployCommand(m_intake, -120));
+        // go back in
+        xboxController.b().onTrue(new DeployCommand(m_intake, 0));
 
-        xboxController.a().onTrue(
-                new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
-                        PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
+        // xboxController.a().onTrue(
+        //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
+        //                 PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
