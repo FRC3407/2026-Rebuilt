@@ -161,7 +161,6 @@ public final class Constants {
     public static final class IntakeConstants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
-        public static final int kDeployLeftCanId = 15;
-        public static final int kDeployRightCanId = 10;
+        public static final int kDeployLeftCanId = 10;
     }
 }

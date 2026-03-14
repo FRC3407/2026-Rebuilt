@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Newton;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -12,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.IntakeConfig;
 import frc.robot.Constants.IntakeConstants;
@@ -24,6 +27,11 @@ public class IntakeSubsystem extends SubsystemBase {
     private RelativeEncoder m_Encoder = m_deployMotor.getEncoder();
     private double set_point = 0; // TODO: use encoders and find out correct value later
     private boolean isDeploying;
+
+    private double minError = 1;
+
+    private Timer timer = new Timer();
+
     /** Creates a new IntakeSubsystem. */
     public IntakeSubsystem() {
         m_intakeMotor.configure(IntakeConfig.kIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -31,19 +39,20 @@ public class IntakeSubsystem extends SubsystemBase {
 
         m_Encoder.setPosition(0);
         isDeploying = false;
-        // m_leftEncoder.setPosition(0);
-        // m_rightEncoder.setPosition(0);
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
-        if(isDeploying){
-            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -1.0,1.0);
-            m_deployMotor.set(motor_speed);
-        }
-        if (m_Encoder.getPosition() >= set_point){
+        double maxSpeed = 0.3;
+        if (timer.hasElapsed(4.0)) {
             stopDeploy();
+        }
+        if (isDeploying) {
+            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition(), set_point), -maxSpeed, maxSpeed);
+            m_deployMotor.set(motor_speed);
+            if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
+                stopDeploy();
+            }
         }
 
     }
@@ -52,12 +61,19 @@ public class IntakeSubsystem extends SubsystemBase {
         m_intakeMotor.set(speed);
     }
 
+    public void setSetPoint(double point) {
+        set_point = point;
+        startDeploy();
+    }
+
 
     /** Deploys the intake out */
-    public void startDeploy(){
+    public void startDeploy() {
+        timer.restart();
         isDeploying = true;
     }
-    public void stopDeploy(){
+
+    public void stopDeploy() {
         m_deployMotor.set(0);
         isDeploying = false;
     }
