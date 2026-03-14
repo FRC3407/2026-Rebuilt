@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
         m_robotContainer = RobotContainer.getInstance();
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        CameraServer.startAutomaticCapture();
     }
 
     /**
