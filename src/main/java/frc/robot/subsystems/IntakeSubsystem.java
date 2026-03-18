@@ -47,10 +47,10 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double maxSpeed = 0.3;
-        if (m_bottomlimitSwitch.isPressed()){ //Not sure if top or bottom is actually top or bottom. Switch these if it doesn't work
+        if (m_toplimitSwitch.isPressed()){ //Not sure if top or bottom is actually top or bottom. Switch these if it doesn't work
             m_Encoder.setPosition(0);
         }
-        if (m_toplimitSwitch.isPressed()){
+        if (m_bottomlimitSwitch.isPressed()){
             deploy_offset = -125 - m_Encoder.getPosition(); 
         }
         if (timer.hasElapsed(4.0)) {
