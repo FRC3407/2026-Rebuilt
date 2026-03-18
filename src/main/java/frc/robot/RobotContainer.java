@@ -24,6 +24,7 @@ import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
+import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
 import frc.robot.commands.DeployCommand;
@@ -159,6 +160,10 @@ public class RobotContainer {
                 xboxController::getLeftX,
                 xboxController::getRightX,
                 m_robotDrive));
+
+
+        xboxController.rightBumper().whileTrue(new ShootTestCommand(
+                m_shooter));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
