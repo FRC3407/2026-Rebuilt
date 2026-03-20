@@ -172,11 +172,32 @@ public final class Constants {
     }
 
     public static final class ShooterDataConstants {
-        public static final Map<Double, Double> shooterData = new HashMap<>(); // RPM -> Distance when hit the floor
+        public static final Map<Double, Double> ballGroundData = new HashMap<>(); // RPM -> Distance when hit the floor in feet
+        public static final Map<Double, Double> distanceShotData = new HashMap<>(); // RPM -> Distance between robot and HUB in inches
 
         static {
             // FILL IN WITH USEFUL DATA LATER!!!
-            shooterData.put(0.0, 0.0);
+            ballGroundData.put(0.1, 0.0);
+            ballGroundData.put(0.2, 0.15);
+            ballGroundData.put(0.3, 0.7);
+            //ballGroundData.put(0.4, 0.0);
+            ballGroundData.put(0.5, 3.9);
+            ballGroundData.put(0.6, 4.7);
+            ballGroundData.put(0.7, 6.4);
+            ballGroundData.put(0.8, 7.6);
+            ballGroundData.put(0.9, 9.0);
+            ballGroundData.put(1.0, 10.0);
+            ballGroundData.put(1.1, 13.0);
+            ballGroundData.put(1.2, 14.0);
+
+            distanceShotData.put(0.95, 85.0);
+            distanceShotData.put(0.85, 73.0);
+            distanceShotData.put(0.75, 67.0);
+            distanceShotData.put(0.65, 35.0);
+            distanceShotData.put(0.70, 32.0);
+            distanceShotData.put(1.00, 105.0);
+            distanceShotData.put(1.05, 105.0);
+            distanceShotData.put(1.10, 105.0);
         }
 
         private static double velFromDist(double d) {
@@ -187,23 +208,24 @@ public final class Constants {
             return Math.sqrt(numerator / denominator);
         }
 
-        public static final Map<Double, Double> rpmToVelocity = shooterData.entrySet().stream()
+        // create a map with the same entries but with the outputs being in velocity rather than distance
+        public static final Map<Double, Double> rpmToVelocity = ballGroundData.entrySet().stream()
             .collect(Collectors.toMap(
                 Map.Entry::getKey,
                 a -> velFromDist(a.getValue())
             ));
 
-        public static double trapezoidApproximation(double velocity) {
+        public static double trapezoidApproximation(Map<Double, Double> map, double velocity) {
             // get bounds for approximation!
             double lower = 0;
             double upper = 1e10;
-            for (Double val : shooterData.keySet()) {
-                if (shooterData.get(val) <= velocity) lower = Math.max(lower, val);
-                if (shooterData.get(val) >= velocity) upper = Math.min(upper, val);
+            for (Double val : map.keySet()) {
+                if (map.get(val) <= velocity) lower = Math.max(lower, val);
+                if (map.get(val) >= velocity) upper = Math.min(upper, val);
             }
 
-            final double lowerVal = shooterData.get(lower);
-            final double upperVal = shooterData.get(upper);
+            final double lowerVal = map.get(lower);
+            final double upperVal = map.get(upper);
 
             final double t = (velocity - lowerVal) / (upperVal - lowerVal);
             return lower + (upper - lower) * t;

@@ -27,14 +27,9 @@ public class ShooterCommand extends Command {
     @Override
     public void execute() {
         final double howMuchTrigger = MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband);
-        final double minPower = 0.5;
-
-        // faster acceleration with a minimum value :P
-        double finalVal = 0;
-        if (howMuchTrigger != 0) finalVal = minPower + (1 - minPower) * howMuchTrigger;
         
-        shooterSubsystem.setSpindexerSpeed(finalVal);
-        shooterSubsystem.setShooterSpeed(finalVal);
+        shooterSubsystem.setSpindexerSpeed(howMuchTrigger);
+        shooterSubsystem.setShooterSpeed(howMuchTrigger);
     }
 
     @Override
