@@ -172,8 +172,8 @@ public final class Constants {
     }
 
     public static final class ShooterDataConstants {
-        public static final Map<Double, Double> ballGroundData = new HashMap<>(); // RPM -> Distance when hit the floor in feet
-        public static final Map<Double, Double> distanceShotData = new HashMap<>(); // RPM -> Distance between robot and HUB in inches
+        private static final Map<Double, Double> ballGroundData = new HashMap<>(); // RPM -> Distance when hit the floor in feet
+        private static final Map<Double, Double> distanceShotData = new HashMap<>(); // RPM -> Distance between robot and HUB in inches
 
         static {
             // FILL IN WITH USEFUL DATA LATER!!!
@@ -211,7 +211,7 @@ public final class Constants {
         // create a map with the same entries but with the outputs being in velocity rather than distance
         public static final Map<Double, Double> rpmToVelocity = ballGroundData.entrySet().stream()
             .collect(Collectors.toMap(
-                Map.Entry::getKey,
+                a -> a.getKey() * 5500, // scaling multiplier
                 a -> velFromDist(a.getValue())
             ));
 
