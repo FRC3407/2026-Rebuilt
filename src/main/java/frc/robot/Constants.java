@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -171,13 +172,41 @@ public final class Constants {
     }
 
     public static final class ShooterDataConstants {
-        public static final Map<Double, Double> shooterData = new HashMap<>();
+        public static final Map<Double, Double> shooterData = new HashMap<>(); // RPM -> Distance when hit the floor
 
         static {
             // FILL IN WITH USEFUL DATA LATER!!!
             shooterData.put(0.0, 0.0);
         }
 
+        private static double velFromDist(double d) {
+            final double g = 9.80665; // m/s^2
+            final double numerator = g * d*d - ShooterConstants.launcherHeight;
+            final double denominator = d * Math.sin(ShooterConstants.launchAngle) * Math.sin(ShooterConstants.launchAngle);
 
+            return Math.sqrt(numerator / denominator);
+        }
+
+        public static final Map<Double, Double> rpmToVelocity = shooterData.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                a -> velFromDist(a.getValue())
+            ));
+
+        public static double trapezoidApproximation(double velocity) {
+            // get bounds for approximation!
+            double lower = 0;
+            double upper = 1e10;
+            for (Double val : shooterData.keySet()) {
+                if (shooterData.get(val) <= velocity) lower = Math.max(lower, val);
+                if (shooterData.get(val) >= velocity) upper = Math.min(upper, val);
+            }
+
+            final double lowerVal = shooterData.get(lower);
+            final double upperVal = shooterData.get(upper);
+
+            final double t = (velocity - lowerVal) / (upperVal - lowerVal);
+            return lower + (upper - lower) * t;
+        }
     }
 }
