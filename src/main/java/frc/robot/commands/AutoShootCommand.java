@@ -7,10 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-
+import frc.robot.Constants.ShooterDataConstants;
 import frc.robot.Constants.ShooterConstants;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AutoShootCommand extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
@@ -44,7 +43,7 @@ public class AutoShootCommand extends Command {
         final double distanceFrom = driveSubsystem.distanceToHub();
         final double earthGravity = 9.80665; // m/s^2
 
-        final double д = distanceFrom + ShooterConstants.hubHeight; // COULD BE either the outer or inner limit, decide/make other case later
+        final double д = distanceFrom + ShooterConstants.hubDiameter / 2; // COULD BE either the outer or inner limit, decide/make other case later
         final double hToHub = ShooterConstants.hubHeight - ShooterConstants.launcherHeight;
         final double θ = ShooterConstants.launchAngle;
 
@@ -57,7 +56,6 @@ public class AutoShootCommand extends Command {
     }
 
     private double velocityToPower(double desiredVelocity) {
-        final double something = 0; // PLEEEEEASE FILL IN WITH THE REAL CONVERSION :ε
-        return something; // ...after testing the correspondence...
+        return ShooterDataConstants.trapezoidApproximation(ShooterDataConstants.rpmToVelocity, desiredVelocity);
     }
 }
