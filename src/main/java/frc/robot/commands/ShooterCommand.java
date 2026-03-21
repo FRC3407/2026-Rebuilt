@@ -6,6 +6,10 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -15,20 +19,30 @@ public class ShooterCommand extends Command {
     private final ShooterSubsystem shooterSubsystem;
     private final DoubleSupplier triggerAxis;
 
-    /**
-     * Creates a new ShooterCommand.
-     */
+    private final Timer time = new Timer();
+
+    /** Creates a new ShooterCommand. */
     public ShooterCommand(DoubleSupplier triggerAxis, ShooterSubsystem m_shooter) {
         this.triggerAxis = triggerAxis;
         this.shooterSubsystem = m_shooter;
         addRequirements(this.shooterSubsystem);
+        SmartDashboard.putData(this);
     }
 
     @Override
+    public void initialize() {
+        time.reset();
+        time.start();
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
     public void execute() {
         final double howMuchTrigger = MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband);
-        shooterSubsystem.setSpindexerSpeed(howMuchTrigger);
         shooterSubsystem.setShooterSpeed(howMuchTrigger);
+
+        // delay for spindexer of 0.5 seconds (hope that my ternary operator isn't too scawy)
+        shooterSubsystem.setSpindexerSpeed(time.hasElapsed(.5) ? 1 : 0);
     }
 
     @Override

@@ -16,11 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PathfindingConstants;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
@@ -50,7 +52,8 @@ public class RobotContainer {
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
-    private final CommandXboxController xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
+    private final CommandGenericHID secondaryController = new CommandGenericHID(OIConstants.kSecondaryControllerPort);
+    private CommandXboxController xboxController; // only used in simulations
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
@@ -92,52 +95,76 @@ public class RobotContainer {
         // The right stick controls translation of the robot.
         // Turning is controlled by the X axis of the left stick.
 
-        // For convenience in testing each command has a joystick and xbox version. By
-        // default the xbox is commented out.
+
+        // For convenience in testing each command has a joystick and xbox version. By default the xbox is commented out.
+        // ================================ MOVING THE ROBOT ================================ //
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         rightJoystick.trigger().whileTrue(new TargetCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
-                m_robotDrive));
-        
+                m_robotDrive
+        ));
+
+        // ================================ INTAKE ================================ //
+
         // -120 is all the way out
-        xboxController.a().onTrue(new DeployCommand(m_intake, -125).withTimeout(3));
+        secondaryController.button(5).onTrue(new DeployCommand(m_intake, -125));
         // go back in
-        xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
-
-        // xboxController.a().onTrue(
-        //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
-        //                 PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
-
+        secondaryController.button(10).onTrue(new DeployCommand(m_intake, 0));
+        
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
                 leftJoystick::getX,
-                leftJoystick::getY,
-                m_robotDrive));
+                leftJoystick::getY, 
+                m_robotDrive
+        ));
 
         // Button 7 on the right stick resets the gyro
         rightJoystick.button(7).onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading));
+                new InstantCommand(m_robotDrive::zeroHeading)
+        );
 
-        m_shooter.setDefaultCommand(new ShooterCommand(
-                xboxController::getRightTriggerAxis,
+
+        // ================================ INTAKE ================================ //
+
+        secondaryController.button(1).and(secondaryController.button(3))
+            .whileTrue(new IntakeCommand(m_intake, 0.67));
+
+        secondaryController.button(1).and(secondaryController.button(3).negate())
+            .whileTrue(new IntakeCommand(m_intake, -0.67));
+
+        // ================================ SHOOTING ================================ //
+        
+        secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
+                () -> 1,
                 m_shooter));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -0.67));
+        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new AutoShootCommand(
+            m_shooter,
+            m_robotDrive
+        ));
 
-        xboxController.rightBumper().whileTrue(new ShooterCommand(
-                () -> -1,
-                m_shooter));
+        // ================================ SPINDEXER ================================ //
+
+        secondaryController.button(6).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(-1);
+        }));
+        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(1);
+        }));
     }
 
     private void configureSimulation() {
+        xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
+
         // Start the robot in an orientation that will make it easier to drive in
         // simulation.
         m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
@@ -148,22 +175,26 @@ public class RobotContainer {
                 xboxController::getLeftX,
                 xboxController::getRightX,
                 xboxController::getRightY,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         // Y button on xbox controller resets the gyro
         xboxController.y().onTrue(
-                new InstantCommand(m_robotDrive::zeroHeading));
+                new InstantCommand(m_robotDrive::zeroHeading)
+        );
 
         m_robotDrive.setDefaultCommand(new DriveCommand(
                 xboxController::getLeftY,
                 xboxController::getLeftX,
                 xboxController::getRightX,
-                m_robotDrive));
+                m_robotDrive
+        ));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
                 xboxController::getLeftX,
-                m_robotDrive));
+                m_robotDrive
+        ));
     }
 
     /**

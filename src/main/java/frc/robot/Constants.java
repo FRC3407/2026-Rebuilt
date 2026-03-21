@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -99,7 +103,8 @@ public final class Constants {
     public static final class OIConstants {
         public static final int kLeftJoystickPort = 0;
         public static final int kRightJoystickPort = 1;
-        public static final int kXboxControllerPort = 2;
+        public static final int kSecondaryControllerPort = 2;
+        public static final int kXboxControllerPort = 3; // only used in simulations
         public static final double kDriveDeadband = 0.05;
     }
 
@@ -114,14 +119,16 @@ public final class Constants {
         public static final Translation2d Red_hub = new Translation2d(16.54 - 4.625, 4.035);
         public static final Transform2d shooterTransform = new Transform2d(-0.2, 0, Rotation2d.fromDegrees(-90));
     }
+
     public static final class PathfindingConstants{
         public static final Pose2d Blue_hub_pose = new Pose2d(3.625, 4.035, new Rotation2d());
         public static final Pose2d Red_hub_pose = new Pose2d(16.54 - 3.625, 4.035, new Rotation2d(Math.PI));
         public static final PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
+            3.0, 4.0,
+            Units.degreesToRadians(540), Units.degreesToRadians(720)
+        );
     }
+
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -168,5 +175,66 @@ public final class Constants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
         public static final int kDeployLeftCanId = 10;
+    }
+
+    public static final class ShooterDataConstants {
+        private static final Map<Double, Double> ballGroundData = new HashMap<>(); // RPM -> Distance when hit the floor in feet
+        private static final Map<Double, Double> distanceShotData = new HashMap<>(); // RPM -> Distance between robot and HUB in inches
+
+        static {
+            // FILL IN WITH USEFUL DATA LATER!!!
+            ballGroundData.put(0.1, 0.0);
+            ballGroundData.put(0.2, 0.15);
+            ballGroundData.put(0.3, 0.7);
+            //ballGroundData.put(0.4, 0.0);
+            ballGroundData.put(0.5, 3.9);
+            ballGroundData.put(0.6, 4.7);
+            ballGroundData.put(0.7, 6.4);
+            ballGroundData.put(0.8, 7.6);
+            ballGroundData.put(0.9, 9.0);
+            ballGroundData.put(1.0, 10.0);
+            ballGroundData.put(1.1, 13.0);
+            ballGroundData.put(1.2, 14.0);
+
+            distanceShotData.put(0.95, 85.0);
+            distanceShotData.put(0.85, 73.0);
+            distanceShotData.put(0.75, 67.0);
+            distanceShotData.put(0.65, 35.0);
+            distanceShotData.put(0.70, 32.0);
+            distanceShotData.put(1.00, 105.0);
+            distanceShotData.put(1.05, 105.0);
+            distanceShotData.put(1.10, 105.0);
+        }
+
+        private static double velFromDist(double d) {
+            final double g = 9.80665; // m/s^2
+            final double numerator = g * d*d - ShooterConstants.launcherHeight;
+            final double denominator = d * Math.sin(ShooterConstants.launchAngle) * Math.sin(ShooterConstants.launchAngle);
+
+            return Math.sqrt(numerator / denominator);
+        }
+
+        // create a map with the same entries but with the outputs being in velocity rather than distance
+        public static final Map<Double, Double> rpmToVelocity = ballGroundData.entrySet().stream()
+            .collect(Collectors.toMap(
+                a -> a.getKey() * 5500, // scaling multiplier
+                a -> velFromDist(a.getValue())
+            ));
+
+        public static double trapezoidApproximation(Map<Double, Double> map, double velocity) {
+            // get bounds for approximation!
+            double lower = 0;
+            double upper = 1e10;
+            for (Double val : map.keySet()) {
+                if (map.get(val) <= velocity) lower = Math.max(lower, val);
+                if (map.get(val) >= velocity) upper = Math.min(upper, val);
+            }
+
+            final double lowerVal = map.get(lower);
+            final double upperVal = map.get(upper);
+
+            final double t = (velocity - lowerVal) / (upperVal - lowerVal);
+            return lower + (upper - lower) * t;
+        }
     }
 }
