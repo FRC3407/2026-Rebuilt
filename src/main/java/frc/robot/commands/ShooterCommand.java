@@ -6,7 +6,10 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -23,6 +26,7 @@ public class ShooterCommand extends Command {
         this.triggerAxis = triggerAxis;
         this.shooterSubsystem = m_shooter;
         addRequirements(this.shooterSubsystem);
+        SmartDashboard.putData(this);
     }
 
     @Override

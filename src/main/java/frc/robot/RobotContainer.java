@@ -143,14 +143,14 @@ public class RobotContainer {
 
         // ================================ SHOOTING ================================ //
 
-        m_shooter.setDefaultCommand(new ShooterCommand(
-                xboxController::getRightTriggerAxis,
-                m_shooter
-        ));
+        // m_shooter.setDefaultCommand(new ShooterCommand(
+        //         xboxController::getRightTriggerAxis,
+        //         m_shooter
+        // ));
 
         xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -0.67));
 
-        xboxController.rightBumper().onTrue(
+        xboxController.rightBumper().whileTrue(
             new AutoShootCommand(m_shooter, m_robotDrive)
         );
     }
