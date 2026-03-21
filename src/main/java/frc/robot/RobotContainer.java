@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -50,7 +51,8 @@ public class RobotContainer {
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
-    private final CommandXboxController xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
+    private final CommandGenericHID secondaryController = new CommandGenericHID(OIConstants.kSecondaryControllerPort);
+    private CommandXboxController xboxController; // only used in simulations
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
@@ -107,9 +109,9 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        xboxController.a().onTrue(new DeployCommand(m_intake, -125).withTimeout(3));
+        secondaryController.button(5).onTrue(new DeployCommand(m_intake, -125));
         // go back in
-        xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
+        secondaryController.button(10).onTrue(new DeployCommand(m_intake, 0));
 
         // xboxController.a().onTrue(
         //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
@@ -126,18 +128,39 @@ public class RobotContainer {
         rightJoystick.button(7).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
-        m_shooter.setDefaultCommand(new ShooterCommand(
-                xboxController::getRightTriggerAxis,
+        // m_shooter.setDefaultCommand(new ShooterCommand(
+        //         xboxController::getRightTriggerAxis,
+        //         m_shooter));
+
+
+        secondaryController.button(1).and(secondaryController.button(3))
+            .whileTrue(new IntakeCommand(m_intake, 0.67)
+        );
+
+        secondaryController.button(1).and(secondaryController.button(3).negate())
+            .whileTrue(new IntakeCommand(m_intake, -0.67)
+        );
+
+        
+        secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
+                () -> -1, // TODO: use auto shoot
+                m_shooter));
+            
+        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new ShooterCommand(
+                () -> 1,
                 m_shooter));
 
-        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -0.67));
-
-        xboxController.rightBumper().whileTrue(new ShooterCommand(
-                () -> -1,
-                m_shooter));
+        secondaryController.button(6).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(-1);
+        }));
+        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(1);
+        }));
     }
 
     private void configureSimulation() {
+        xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
+
         // Start the robot in an orientation that will make it easier to drive in
         // simulation.
         m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
