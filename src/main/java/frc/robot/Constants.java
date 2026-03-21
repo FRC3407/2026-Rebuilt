@@ -105,9 +105,9 @@ public final class Constants {
     }
 
     public static final class TargetConstants {
-        public static final double targetProportional = 0.15;
+        public static final double targetProportional = 0.9;
         public static final double targetIntegral = 0;
-        public static final double targetDerivative = 0.011;
+        public static final double targetDerivative = 0.011;                                                                                                                                                                                                                                                                                                      
         public static final double pointProportional = 0.15;
         public static final double pointIntegral = 0;
         public static final double pointDerivative = 0.011;

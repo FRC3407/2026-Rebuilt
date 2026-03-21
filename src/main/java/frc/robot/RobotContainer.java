@@ -25,6 +25,7 @@ import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
+import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
 import frc.robot.commands.DeployCommand;
@@ -137,6 +138,12 @@ public class RobotContainer {
             .whileTrue(new IntakeCommand(m_intake, 0.67)
         );
 
+        // xboxController.rightBumper().whileTrue(new ShooterCommand(
+        //         () -> -1,
+        //         m_shooter));
+
+        xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
+
         secondaryController.button(1).and(secondaryController.button(3).negate())
             .whileTrue(new IntakeCommand(m_intake, -0.67)
         );
@@ -182,6 +189,9 @@ public class RobotContainer {
                 xboxController::getLeftX,
                 xboxController::getRightX,
                 m_robotDrive));
+
+
+        xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
