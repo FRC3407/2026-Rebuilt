@@ -27,6 +27,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
+import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -106,9 +107,17 @@ public class RobotContainer {
         rightJoystick.trigger().whileTrue(new TargetCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
-                m_robotDrive
-        ));
+                m_robotDrive));
         
+        // -120 is all the way out
+        xboxController.a().onTrue(new DeployCommand(m_intake, -125).withTimeout(3));
+        // go back in
+        xboxController.b().onTrue(new DeployCommand(m_intake, 0).withTimeout(3.5));
+
+        // xboxController.a().onTrue(
+        //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
+        //                 PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
+
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
                 rightJoystick::getX,
@@ -127,10 +136,6 @@ public class RobotContainer {
 
         // m_intake.setDefaultCommand(new deployCommand(m_intake));
 
-        xboxController.leftBumper().whileTrue(
-            new IntakeCommand(m_intake, -1)
-        );
-
         xboxController.a().onTrue(
             new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose, PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive))
         );
@@ -142,6 +147,8 @@ public class RobotContainer {
                 xboxController::getRightTriggerAxis,
                 m_shooter
         ));
+
+        xboxController.leftTrigger().whileTrue(new IntakeCommand(m_intake, -0.67));
 
         xboxController.rightBumper().onTrue(
             new AutoShootCommand(m_shooter, m_robotDrive)
