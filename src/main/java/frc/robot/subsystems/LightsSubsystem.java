@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 /**
  * Subsystem to controll all the lights running on the external lights
@@ -33,6 +34,9 @@ public class LightsSubsystem extends SubsystemBase {
 
     // Animations:
     public static final int LADDER_RED = 0;
+    public static final int TEAM_NUMBER = 1;
+    public static final int SHOOTING = 2;
+    public static final int EYES_ANIM = 17;
 
     private AnimationState[] currentAnimation = new AnimationState[MAX_STRIPS];
     private AnimationState[] nextAnimation = new AnimationState[MAX_STRIPS];
@@ -56,6 +60,35 @@ public class LightsSubsystem extends SubsystemBase {
     public void periodic() {
         // TODO: monitor internal robot state and change animations as necessary
         // using setAnimation or clearAllAnimations
+
+        if (DriverStation.isDisabled() || DriverStation.isTest()) {
+            setAnimation(LEFT_PANEL, TEAM_NUMBER);
+            setAnimation(RIGHT_PANEL, TEAM_NUMBER);
+            setAnimation(LEFT_EYE, EYES_ANIM);
+            setAnimation(RIGHT_EYE, EYES_ANIM);
+
+        } else if (DriverStation.isAutonomous()) {
+            setAnimation(LEFT_EYE, EYES_ANIM);
+            setAnimation(RIGHT_EYE, EYES_ANIM);
+            if (RobotContainer.getInstance().m_shooter.getShooterSpeed() != 0.0){
+                setAnimation(LEFT_PANEL, SHOOTING);
+                setAnimation(RIGHT_PANEL, SHOOTING);
+            } else {
+                setAnimation(LEFT_PANEL, TEAM_NUMBER);
+                setAnimation(RIGHT_PANEL, TEAM_NUMBER);
+            }
+
+        } else if (DriverStation.isTeleop()) {
+            setAnimation(LEFT_EYE, EYES_ANIM);
+            setAnimation(RIGHT_EYE, EYES_ANIM);
+            if (RobotContainer.getInstance().m_shooter.getShooterSpeed() != 0.0){
+                setAnimation(LEFT_PANEL, SHOOTING);
+                setAnimation(RIGHT_PANEL, SHOOTING);
+            } else {
+                setAnimation(LEFT_PANEL, TEAM_NUMBER);
+                setAnimation(RIGHT_PANEL, TEAM_NUMBER);
+            }
+        }
 
         sendAllAnimations();
     }
