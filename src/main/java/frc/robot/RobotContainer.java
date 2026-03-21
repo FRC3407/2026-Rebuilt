@@ -172,13 +172,6 @@ public class RobotContainer {
             m_shooter.setSpindexerSpeed(0);
         }));
 
-        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(1);
-        }));
-
-        secondaryController.button(12).onFalse(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(0);
-        }));
     }
 
     private void configureSimulation() {
