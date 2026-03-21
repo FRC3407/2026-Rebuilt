@@ -25,12 +25,14 @@ import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
+import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
 import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -48,6 +50,7 @@ public class RobotContainer {
     public final BeeperSubsystem m_beeper;
     public final ShooterSubsystem m_shooter;
     public final IntakeSubsystem m_intake;
+    public final LightsSubsystem m_lights;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -74,6 +77,7 @@ public class RobotContainer {
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
+        m_lights = new LightsSubsystem(m_vision);
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
@@ -137,6 +141,12 @@ public class RobotContainer {
             .whileTrue(new IntakeCommand(m_intake, 0.67)
         );
 
+        // xboxController.rightBumper().whileTrue(new ShooterCommand(
+        //         () -> -1,
+        //         m_shooter));
+
+        // xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
+
         secondaryController.button(1).and(secondaryController.button(3).negate())
             .whileTrue(new IntakeCommand(m_intake, -0.67)
         );
@@ -153,8 +163,21 @@ public class RobotContainer {
         secondaryController.button(5).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(-1);
         }));
+      
         secondaryController.button(10).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(1);
+        }));
+      
+        secondaryController.button(10).onFalse(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(0);
+        }));
+
+        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(1);
+        }));
+
+        secondaryController.button(12).onFalse(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(0);
         }));
     }
 
@@ -182,6 +205,9 @@ public class RobotContainer {
                 xboxController::getLeftX,
                 xboxController::getRightX,
                 m_robotDrive));
+
+
+        xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,

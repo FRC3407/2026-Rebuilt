@@ -78,7 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getShooterSpeed() {
-        return m_shooter.get();
+        return m_shooterEncoder.getVelocity();
     }
     public double getSpindexerSpeed() {
         return m_spindexer.get();
