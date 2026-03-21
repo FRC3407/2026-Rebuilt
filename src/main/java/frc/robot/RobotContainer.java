@@ -142,7 +142,7 @@ public class RobotContainer {
         //         () -> -1,
         //         m_shooter));
 
-        xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
+        // xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
 
         secondaryController.button(1).and(secondaryController.button(3).negate())
             .whileTrue(new IntakeCommand(m_intake, -0.67)
