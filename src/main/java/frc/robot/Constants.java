@@ -148,12 +148,18 @@ public final class Constants {
         public static final double kFreeSpeedRpm = 5676;
     }
 
+    public static final class VortexMotorConstants {
+        public static final double kFreeSpeedRpm = 6784;
+    }
+
     public static final class VisionConstants {
         public static final AprilTagFields kFieldLayout = AprilTagFields.k2026RebuiltWelded;
         public static final double kMaxAmbiguity = 0.10;
     }
 
     public static final class ShooterConstants {
+        public static final double kShooterWheelFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
+
         public static final int kShooterCanId = 16; // vortex motor
         public static final int kSpindexerCanId = 13; // neo motor
 
@@ -167,8 +173,7 @@ public final class Constants {
     public static final class IntakeConstants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
-        public static final int kDeployLeftCanId = 15;
-        public static final int kDeployRightCanId = 10;
+        public static final int kDeployLeftCanId = 10;
     }
 
     public static final class ShooterDataConstants {
