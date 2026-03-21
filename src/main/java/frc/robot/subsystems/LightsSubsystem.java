@@ -45,9 +45,13 @@ public class LightsSubsystem extends SubsystemBase {
     private I2C i2c = null;
 
     private final VisionSubsystem m_vision;
+    private final ShooterSubsystem m_shooter;
+    private final DriveSubsystem m_drive;
 
-    public LightsSubsystem(VisionSubsystem vision) {
+    public LightsSubsystem(VisionSubsystem vision, ShooterSubsystem shooter, DriveSubsystem drive) {
         this.m_vision = vision;
+        this.m_shooter = shooter;
+        this.m_drive = drive;
         i2c = new I2C(Port.kOnboard, I2C_ADDRESS);
         for (int s = 0; s < MAX_STRIPS; s++) {
             currentAnimation[s] = new AnimationState(0, null);
@@ -61,6 +65,8 @@ public class LightsSubsystem extends SubsystemBase {
         // TODO: monitor internal robot state and change animations as necessary
         // using setAnimation or clearAllAnimations
 
+        double distanceToHub = m_drive.distanceToHub();
+
         if (DriverStation.isDisabled() || DriverStation.isTest()) {
             setAnimation(LEFT_PANEL, TEAM_NUMBER);
             setAnimation(RIGHT_PANEL, TEAM_NUMBER);
@@ -70,7 +76,7 @@ public class LightsSubsystem extends SubsystemBase {
         } else if (DriverStation.isAutonomous()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
-            if (RobotContainer.getInstance().m_shooter.getShooterSpeed() != 0.0){
+            if (m_shooter.getShooterSpeed() != 0.0) {
                 setAnimation(LEFT_PANEL, SHOOTING);
                 setAnimation(RIGHT_PANEL, SHOOTING);
             } else {
@@ -81,7 +87,10 @@ public class LightsSubsystem extends SubsystemBase {
         } else if (DriverStation.isTeleop()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
-            if (RobotContainer.getInstance().m_shooter.getShooterSpeed() != 0.0){
+            if (distanceToHub >= 2.7 && distanceToHub <= 3.3) {
+                setAnimation(LEFT_PANEL, LADDER_RED);
+                setAnimation(RIGHT_PANEL, LADDER_RED);
+            } else if (m_shooter.getShooterSpeed() != 0.0) {
                 setAnimation(LEFT_PANEL, SHOOTING);
                 setAnimation(RIGHT_PANEL, SHOOTING);
             } else {
