@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 
 /**
  * Subsystem to controll all the lights running on the external lights
@@ -66,6 +66,9 @@ public class LightsSubsystem extends SubsystemBase {
         // using setAnimation or clearAllAnimations
 
         double distanceToHub = m_drive.distanceToHub();
+        boolean optimalShootingDistance = distanceToHub >= 2.7 && distanceToHub <= 3.3;
+        SmartDashboard.putNumber("LightsSubsystem/distanceToHub", distanceToHub);
+        SmartDashboard.putBoolean("LightsSubsystem/optimalShootingDistance", optimalShootingDistance);
 
         if (DriverStation.isDisabled() || DriverStation.isTest()) {
             setAnimation(LEFT_PANEL, TEAM_NUMBER);
@@ -87,7 +90,7 @@ public class LightsSubsystem extends SubsystemBase {
         } else if (DriverStation.isTeleop()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
-            if (distanceToHub >= 2.7 && distanceToHub <= 3.3) {
+            if (optimalShootingDistance) {
                 setAnimation(LEFT_PANEL, LADDER_RED);
                 setAnimation(RIGHT_PANEL, LADDER_RED);
             } else if (m_shooter.getShooterSpeed() != 0.0) {
