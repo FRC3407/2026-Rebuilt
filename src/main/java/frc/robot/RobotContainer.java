@@ -32,6 +32,7 @@ import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -49,6 +50,7 @@ public class RobotContainer {
     public final BeeperSubsystem m_beeper;
     public final ShooterSubsystem m_shooter;
     public final IntakeSubsystem m_intake;
+    public final LightsSubsystem m_lights;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -75,6 +77,7 @@ public class RobotContainer {
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
+        m_lights = new LightsSubsystem(m_vision);
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
