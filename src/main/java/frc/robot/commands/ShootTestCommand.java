@@ -10,6 +10,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -17,12 +18,14 @@ public class ShootTestCommand extends Command {
   /** Creates a new ShootTestCommand. */
 
   private final ShooterSubsystem shooterSubsystem;
+  private final DriveSubsystem driveSubsystem;
   private double speed = 1.0;
   private Timer time = new Timer();
 
-  public ShootTestCommand(ShooterSubsystem m_shooter) {
+  public ShootTestCommand(ShooterSubsystem m_shooter, DriveSubsystem m_drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooterSubsystem = m_shooter;
+    this.driveSubsystem = m_drive;
     SmartDashboard.putData("Speed", this);
 
   }
@@ -30,6 +33,8 @@ public class ShootTestCommand extends Command {
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
+    builder.addDoubleProperty("Hub Distance", driveSubsystem::distanceToHub, null);
+    builder.addDoubleProperty("Actual Shooter Speed", shooterSubsystem::getShooterSpeed, null);
     builder.addDoubleProperty("Speed", () -> speed, (s) -> speed = s);
   }
 
@@ -45,9 +50,12 @@ public class ShootTestCommand extends Command {
   @Override
   public void execute() {
     shooterSubsystem.setShooterSpeed(speed);
-    if (time.hasElapsed(.5)) {
-      
-    } 
+    if (time.hasElapsed(1.5)) {
+      shooterSubsystem.setSpindexerSpeed(1);
+    } else {
+      shooterSubsystem.setSpindexerSpeed(0);
+
+    }
   }
 
   // Called once the command ends or is interrupted.
