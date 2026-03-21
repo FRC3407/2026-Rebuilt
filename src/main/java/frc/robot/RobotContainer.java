@@ -113,9 +113,9 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        secondaryController.button(5).onTrue(new DeployCommand(m_intake, -125));
+        secondaryController.button(6).onTrue(new DeployCommand(m_intake, -125));
         // go back in
-        secondaryController.button(10).onTrue(new DeployCommand(m_intake, 0));
+        secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
 
         // xboxController.a().onTrue(
         //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
@@ -160,21 +160,22 @@ public class RobotContainer {
                 () -> 1,
                 m_shooter));
 
-        secondaryController.button(6).whileTrue(new InstantCommand(() -> {
+        secondaryController.button(5).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(1);
+        }));
+      
+        secondaryController.button(10).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(-1);
         }));
 
-        secondaryController.button(6).onFalse(new InstantCommand(() -> {
+          secondaryController.button(5).onFalse(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(0);
+        }));
+      
+        secondaryController.button(10).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
         }));
 
-        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(1);
-        }));
-
-        secondaryController.button(12).onFalse(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(0);
-        }));
     }
 
     private void configureSimulation() {
