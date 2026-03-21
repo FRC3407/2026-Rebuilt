@@ -161,11 +161,15 @@ public class RobotContainer {
                 m_shooter));
 
         secondaryController.button(5).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(-1);
+            m_shooter.setSpindexerSpeed(1);
         }));
       
         secondaryController.button(10).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(1);
+            m_shooter.setSpindexerSpeed(-1);
+        }));
+
+          secondaryController.button(5).onFalse(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(0);
         }));
       
         secondaryController.button(10).onFalse(new InstantCommand(() -> {
