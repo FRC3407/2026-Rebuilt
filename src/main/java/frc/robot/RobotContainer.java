@@ -133,22 +133,21 @@ public class RobotContainer {
         //         m_shooter));
 
 
-        // secondaryController.button(1).whileTrue(new IntakeCommand(m_intake, -0.67));
         secondaryController.button(1).and(secondaryController.button(3))
-            .whileTrue(new IntakeCommand(m_intake, 0.67));
+            .whileTrue(new IntakeCommand(m_intake, 0.67)
+        );
 
         secondaryController.button(1).and(secondaryController.button(3).negate())
-            .whileTrue(new IntakeCommand(m_intake, -0.67));
+            .whileTrue(new IntakeCommand(m_intake, -0.67)
+        );
 
-        
-        // secondaryController.button(3).whileTrue(new IntakeCommand(m_intake, 0.67));
         
         secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
-                () -> 1,
-                m_shooter));
-
-        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new ShooterCommand(
                 () -> -1, // TODO: use auto shoot
+                m_shooter));
+            
+        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new ShooterCommand(
+                () -> 1,
                 m_shooter));
 
         secondaryController.button(6).whileTrue(new InstantCommand(() -> {
