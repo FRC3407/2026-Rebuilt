@@ -53,7 +53,7 @@ public class RobotContainer {
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
     private final CommandGenericHID secondaryController = new CommandGenericHID(OIConstants.kSecondaryControllerPort);
-    private CommandXboxController xboxController; // only used in simulations
+    private CommandXboxController xboxController = new CommandXboxController(3); // only used in simulations
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
@@ -110,13 +110,9 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        secondaryController.button(5).onTrue(new DeployCommand(m_intake, -125));
+        xboxController.a().onTrue(new DeployCommand(m_intake, -125));
         // go back in
         secondaryController.button(10).onTrue(new DeployCommand(m_intake, 0));
-
-        // xboxController.a().onTrue(
-        //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
-        //                 PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
