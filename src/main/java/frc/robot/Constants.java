@@ -99,7 +99,8 @@ public final class Constants {
     public static final class OIConstants {
         public static final int kLeftJoystickPort = 0;
         public static final int kRightJoystickPort = 1;
-        public static final int kXboxControllerPort = 2;
+        public static final int kSecondaryControllerPort = 2;
+        public static final int kXboxControllerPort = 3; // only used in simulations
         public static final double kDriveDeadband = 0.05;
     }
 
