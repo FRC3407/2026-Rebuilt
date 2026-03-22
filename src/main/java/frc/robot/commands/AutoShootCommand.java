@@ -16,6 +16,9 @@ public class AutoShootCommand extends Command {
     private final DriveSubsystem m_robotDrive;
     private final Timer timer = new Timer();
 
+    /** Delay time in seconds. */
+    public final double SPINDEXER_TIMEOUT = 0.5;
+
     public AutoShootCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
         m_shooter = shooterSubsystem;
         m_robotDrive = driveSubsystem;
@@ -31,7 +34,7 @@ public class AutoShootCommand extends Command {
     public void execute() {
         double distanceToHub = m_robotDrive.distanceToHub();
         m_shooter.setShooterSpeed(getShooterSpeed(distanceToHub));
-        m_shooter.setSpindexerSpeed(timer.hasElapsed(0.5) ? 1.0 : 0.0);
+        m_shooter.setSpindexerSpeed(timer.hasElapsed(SPINDEXER_TIMEOUT) ? 1.0 : 0.0);
 
     }
 
