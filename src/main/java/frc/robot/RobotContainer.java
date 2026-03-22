@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
-import java.util.Set;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -14,21 +12,20 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.PathfindingConstants;
+import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.DeployCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
-import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -156,9 +153,8 @@ public class RobotContainer {
                 () -> -1, // TODO: use auto shoot
                 m_shooter));
             
-        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new ShooterCommand(
-                () -> 1,
-                m_shooter));
+        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(
+            new AutoShootCommand(m_shooter, m_robotDrive));
 
         secondaryController.button(5).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(1);
