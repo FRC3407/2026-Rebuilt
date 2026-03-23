@@ -74,7 +74,7 @@ public class RobotContainer {
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
-        m_lights = new LightsSubsystem(m_vision);
+        m_lights = new LightsSubsystem(m_vision, m_shooter, m_robotDrive);
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
