@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
+import static edu.wpi.first.math.util.Units.metersToInches;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
@@ -16,7 +17,9 @@ public class AutoShootCommand extends Command {
     private final DriveSubsystem m_robotDrive;
     private final Timer timer = new Timer();
 
-    /** Delay time in seconds. */
+    /**
+     * Delay time in seconds.
+     */
     public final double SPINDEXER_TIMEOUT = 0.5;
 
     public AutoShootCommand(ShooterSubsystem shooterSubsystem, DriveSubsystem driveSubsystem) {
@@ -67,6 +70,8 @@ public class AutoShootCommand extends Command {
     }
 
     /**
+     * Calculate shooter speed based on previosly recorded shooter data.
+     * 
      * @param distanceToHub Distance in meters.
      * @return Shooter speed from in RPM.
      */
@@ -88,5 +93,15 @@ public class AutoShootCommand extends Command {
         r = (distanceToHub - d1) / (d2 - d1);
 
         return p1 + r * (p2 - p1);
+    }
+
+    /**
+     * Simplified shooter speed calculation using only a linear function.
+     * 
+     * @param distanceToHub Distance in meters.
+     * @return Shooter speed from in RPM.
+     */
+    protected static double getShooterSpeed_simple(double distanceToHub) {
+        return (metersToInches(distanceToHub) + 80.7) / 177.0;
     }
 }
