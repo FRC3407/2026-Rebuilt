@@ -3,8 +3,6 @@ package frc.robot.commands;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static edu.wpi.first.math.util.Units.inchesToMeters;
-import static edu.wpi.first.math.util.Units.metersToInches;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
@@ -50,28 +48,19 @@ public class AutoShootCommand extends Command {
     private static Map<Double, Double> shooterData = new TreeMap<>();
 
     static {
-        shooterData.put(inchesToMeters(81), 0.95);
-        shooterData.put(inchesToMeters(91), 0.95);
-        shooterData.put(inchesToMeters(73), 0.85);
-        shooterData.put(inchesToMeters(73), 0.85);
-        shooterData.put(inchesToMeters(62), 0.75);
-        shooterData.put(inchesToMeters(51), 0.75);
-        shooterData.put(inchesToMeters(54), 0.75);
-        shooterData.put(inchesToMeters(42), 0.65);
-        shooterData.put(inchesToMeters(32), 0.65);
-        shooterData.put(inchesToMeters(32), 0.7);
-        shooterData.put(inchesToMeters(32), 0.7);
-        shooterData.put(inchesToMeters(105), 1.0);
-        shooterData.put(inchesToMeters(105), 1.1);
-        shooterData.put(inchesToMeters(105), 1.05);
+        shooterData.put(2.7, 0.725);
+        shooterData.put(3.7, 0.77);
+        shooterData.put(1.8, 0.62);
+        shooterData.put(2.3, 0.7);
+        shooterData.put(3.3, 0.815);
 
-        shooterData.put(inchesToMeters(0), 0.65);
-        shooterData.put(inchesToMeters(1000), 1.05);
+        shooterData.put(0.0, 0.62);
+        shooterData.put(100.0, 1.00);
     }
 
     /**
      * Calculate shooter speed based on previosly recorded shooter data.
-     * 
+     *
      * @param distanceToHub Distance in meters.
      * @return Shooter speed from in RPM.
      */
@@ -97,11 +86,11 @@ public class AutoShootCommand extends Command {
 
     /**
      * Simplified shooter speed calculation using only a linear function.
-     * 
+     *
      * @param distanceToHub Distance in meters.
      * @return Shooter speed from in RPM.
      */
     protected static double getShooterSpeed_simple(double distanceToHub) {
-        return (metersToInches(distanceToHub) + 80.7) / 177.0;
+        return 0.0879 * distanceToHub + 0.483;
     }
 }

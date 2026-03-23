@@ -3,7 +3,6 @@ package frc.robot.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static frc.robot.commands.AutoShootCommand.getShooterSpeed;
 
 /**
@@ -11,22 +10,25 @@ import static frc.robot.commands.AutoShootCommand.getShooterSpeed;
  */
 public class AuthShootCommandTest {
 
-    /** Acceptable error. */
+    /**
+     * Acceptable error.
+     */
     final double DELTA = 0.05;
 
     @Test
-    void testGetShooterSpeed() {
-        assertEquals(0.65, getShooterSpeed(inchesToMeters(42)), DELTA);
-        assertEquals(0.75, getShooterSpeed(inchesToMeters(51)), DELTA);
-        assertEquals(0.75, getShooterSpeed(inchesToMeters(54)), DELTA);
-        assertEquals(0.95, getShooterSpeed(inchesToMeters(81)), DELTA);
-        assertEquals(0.95, getShooterSpeed(inchesToMeters(91)), DELTA);
+    void testGetShooterSpeed_exact_match_to_data() {
+        assertEquals(0.725, getShooterSpeed(2.7), DELTA);
+        assertEquals(0.77, getShooterSpeed(3.7), DELTA);
+        assertEquals(0.62, getShooterSpeed(1.8), DELTA);
+        assertEquals(0.70, getShooterSpeed(2.3), DELTA);
+        assertEquals(0.815, getShooterSpeed(3.3), DELTA);
+    }
 
-        assertEquals(0.72, getShooterSpeed(inchesToMeters(48)), DELTA, "Interpolating between 42 and 54 inches");
-        assertEquals(0.95, getShooterSpeed(inchesToMeters(86)), DELTA, "Interpolating between 81 and 91 inches");
-
-        assertEquals(0.75, getShooterSpeed(inchesToMeters(60)), DELTA, "Interpolating");
-        assertEquals(0.82, getShooterSpeed(inchesToMeters(70)), DELTA, "Interpolating");
-        assertEquals(1.01, getShooterSpeed(inchesToMeters(100)), DELTA, "Interpolating");
+    @Test
+    void testGetShooterSpeed_interpolating() {
+        assertEquals(0.67, getShooterSpeed(2.25), DELTA, "Interpolating between 1.8 and 2.7 meters");
+        assertEquals(0.79, getShooterSpeed(3.5), DELTA, "Interpolating between 3.3 and 3.7 meters");
+        assertEquals(0.71, getShooterSpeed(2.5), DELTA, "Interpolating between 2.3 and 2.7 meters");
+        assertEquals(0.80, getShooterSpeed(3.4), DELTA, "Interpolating between 3.3 and 3.7 meters");
     }
 }
