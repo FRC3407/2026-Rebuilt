@@ -41,7 +41,7 @@ public class TargetCommand extends Command {
         this.sidewaysStick = sidewaysStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
-        SmartDashboard.putData("PID", this);
+        SmartDashboard.putData("Target PID", this);
     }
 
     @Override

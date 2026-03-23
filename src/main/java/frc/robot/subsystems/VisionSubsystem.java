@@ -39,8 +39,8 @@ public class VisionSubsystem extends SubsystemBase {
         // Portside
         cameraList.add(new PhotonVisionCamera("Arducam_OV9281_USB_Camera", this.tagLayout, new Transform3d(
                 new Translation3d(
-                        Units.inchesToMeters(-12.0), // left or right from center
-                        Units.inchesToMeters(-6.0), // forward from robot center
+                        Units.inchesToMeters(-3.5), // 3.5" backwards
+                        Units.inchesToMeters(12.0), // 12" left
                         Units.inchesToMeters(20.5)), // distance up from the floor
                 new Rotation3d(
                         Rotation2d.fromDegrees(0).getRadians(), // roll
@@ -50,8 +50,8 @@ public class VisionSubsystem extends SubsystemBase {
         // Starboard camera
         cameraList.add(new PhotonVisionCamera("Arducam_OV9281_USB_Camera (1)", this.tagLayout, new Transform3d(
                 new Translation3d(
-                        Units.inchesToMeters(12.0), // left or right from center
-                        Units.inchesToMeters(-6.0), // forward from robot center
+                        Units.inchesToMeters(-3.5), // 3.5" backwards
+                        Units.inchesToMeters(-12.0), // 12" right
                         Units.inchesToMeters(20.5)), // distance up from the floor
                 new Rotation3d(
                         Rotation2d.fromDegrees(0).getRadians(), // roll
