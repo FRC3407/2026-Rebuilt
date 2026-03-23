@@ -112,8 +112,8 @@
             "title": "Field",
             "x": 640.0,
             "y": 0.0,
-            "width": 256.0,
-            "height": 512.0,
+            "width": 384.0,
+            "height": 640.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -140,6 +140,23 @@
               "topic": "/CameraPublisher/photonvision_Port_1183_Input_MJPEG_Server",
               "period": 0.06,
               "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Optimal",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/LightsSubsystem/optimalShootingDistance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "Checkmark",
+              "false_icon": "X"
             }
           }
         ]
@@ -188,8 +205,8 @@
             "title": "Field",
             "x": 640.0,
             "y": 0.0,
-            "width": 256.0,
-            "height": 512.0,
+            "width": 384.0,
+            "height": 640.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
@@ -216,6 +233,23 @@
               "topic": "/CameraPublisher/photonvision_Port_1183_Input_MJPEG_Server",
               "period": 0.06,
               "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Optimal",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/LightsSubsystem/optimalShootingDistance",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "Checkmark",
+              "false_icon": "X"
             }
           }
         ]
