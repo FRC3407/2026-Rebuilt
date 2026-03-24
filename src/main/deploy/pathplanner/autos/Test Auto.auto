@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Test Path"
           }
         },
         {
@@ -52,6 +52,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Tests",
   "choreoAuto": false
 }
