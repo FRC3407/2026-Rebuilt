@@ -22,7 +22,6 @@ public class AnotherAutoShootCommand extends Command {
         this.driveSubsystem = m_drive;
         SmartDashboard.putData("Auto Shoot Command", this);
         addRequirements(m_shooter);
-        addRequirements(m_drive);
     }
 
 
