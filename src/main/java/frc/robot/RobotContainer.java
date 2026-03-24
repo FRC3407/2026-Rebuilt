@@ -56,7 +56,7 @@ public class RobotContainer {
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
     private final CommandGenericHID secondaryController = new CommandGenericHID(OIConstants.kSecondaryControllerPort);
-    private CommandXboxController xboxController = new CommandXboxController(3); // only used in simulations
+    private CommandXboxController xboxController = null; // only used in simulations
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
