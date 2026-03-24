@@ -28,6 +28,7 @@ import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
+import frc.robot.commands.AnotherAutoShootCommand;
 import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -55,7 +56,7 @@ public class RobotContainer {
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
     private final CommandGenericHID secondaryController = new CommandGenericHID(OIConstants.kSecondaryControllerPort);
-    private CommandXboxController xboxController; // only used in simulations
+    private CommandXboxController xboxController = null; // only used in simulations
     // Dashboard chooser for autonomous command
     private final SendableChooser<Command> autoChooser;
     private static RobotContainer instance;
@@ -114,12 +115,9 @@ public class RobotContainer {
         
         // -120 is all the way out
         secondaryController.button(6).onTrue(new DeployCommand(m_intake, -125));
+
         // go back in
         secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
-
-        // xboxController.a().onTrue(
-        //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
-        //                 PathfindingConstants.Blue_hub_pose), Set.of(m_robotDrive)));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
@@ -145,20 +143,16 @@ public class RobotContainer {
         //         () -> -1,
         //         m_shooter));
 
-        // xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
-
         secondaryController.button(1).and(secondaryController.button(3).negate())
             .whileTrue(new IntakeCommand(m_intake, -0.67)
         );
 
         
         secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
-                () -> -1, // TODO: use auto shoot
+                () -> -1,
                 m_shooter));
             
-        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new ShooterCommand(
-                () -> 1,
-                m_shooter));
+        secondaryController.button(2).and(secondaryController.button(4).negate()).whileTrue(new AnotherAutoShootCommand(m_shooter,m_robotDrive));
 
         secondaryController.button(5).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(1);
@@ -204,7 +198,7 @@ public class RobotContainer {
                 m_robotDrive));
 
 
-        xboxController.rightBumper().whileTrue(new ShootTestCommand(m_shooter,m_robotDrive));
+        xboxController.rightBumper().whileTrue(new AnotherAutoShootCommand(m_shooter, m_robotDrive));
 
         xboxController.x().whileTrue(new TargetCommand(
                 xboxController::getLeftY,
