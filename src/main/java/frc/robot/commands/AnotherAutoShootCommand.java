@@ -29,8 +29,16 @@ public class AnotherAutoShootCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooterSubsystem = m_shooter;
     this.driveSubsystem = m_drive;
-
+    SmartDashboard.putData("Auto Shoot Command", this);
   }
+
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
+    builder.addDoubleProperty("auto shoot speed", () -> getShooterSpeed(driveSubsystem.distanceToHub()), null);
+  }
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -43,7 +51,6 @@ public class AnotherAutoShootCommand extends Command {
   @Override
   public void execute() {
     shooterSubsystem.setShooterSpeed(getShooterSpeed(driveSubsystem.distanceToHub()));
-    SmartDashboard.putNumber("auto shoot speed", getShooterSpeed(driveSubsystem.distanceToHub()));
 
     if (time.hasElapsed(1.5)) {
       shooterSubsystem.setSpindexerSpeed(1);
