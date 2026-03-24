@@ -32,6 +32,7 @@ import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -49,6 +50,7 @@ public class RobotContainer {
     public final BeeperSubsystem m_beeper;
     public final ShooterSubsystem m_shooter;
     public final IntakeSubsystem m_intake;
+    public final LightsSubsystem m_lights;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -75,6 +77,7 @@ public class RobotContainer {
         m_beeper = new BeeperSubsystem();
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
+        m_lights = new LightsSubsystem(m_vision, m_shooter, m_robotDrive);
 
         autoChooser = configureAutonomous();
         configureButtonBindings();
@@ -110,9 +113,9 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        secondaryController.button(5).onTrue(new DeployCommand(m_intake, -125));
+        secondaryController.button(6).onTrue(new DeployCommand(m_intake, -125));
         // go back in
-        secondaryController.button(10).onTrue(new DeployCommand(m_intake, 0));
+        secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
 
         // xboxController.a().onTrue(
         //         new DeferredCommand(m_robotDrive.pathfindToPoseSupplier(PathfindingConstants.Red_hub_pose,
@@ -157,21 +160,22 @@ public class RobotContainer {
                 () -> 1,
                 m_shooter));
 
-        secondaryController.button(6).whileTrue(new InstantCommand(() -> {
+        secondaryController.button(5).whileTrue(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(1);
+        }));
+      
+        secondaryController.button(10).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(-1);
         }));
 
-        secondaryController.button(6).onFalse(new InstantCommand(() -> {
+          secondaryController.button(5).onFalse(new InstantCommand(() -> {
+            m_shooter.setSpindexerSpeed(0);
+        }));
+      
+        secondaryController.button(10).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
         }));
 
-        secondaryController.button(12).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(1);
-        }));
-
-        secondaryController.button(12).onFalse(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(0);
-        }));
     }
 
     private void configureSimulation() {
