@@ -42,9 +42,10 @@ public class AnotherAutoShootCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        shooterSubsystem.setShooterSpeed(getShooterSpeed(driveSubsystem.distanceToHub()));
-
-        if (time.hasElapsed(1.5)) {
+        double speed = getShooterSpeed(driveSubsystem.distanceToHub());
+        shooterSubsystem.setShooterSpeed(speed);
+        // if (time.hasElapsed(1.5)) {
+        if (shooterSubsystem.getShooterSpeed() > 0.9 * speed * shooterSubsystem.scalingFactor) {
             shooterSubsystem.setSpindexerSpeed(1);
         } else {
             shooterSubsystem.setSpindexerSpeed(0);
