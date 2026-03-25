@@ -136,7 +136,7 @@ public class RobotContainer {
 
 
         secondaryController.button(1).and(secondaryController.button(3))
-            .whileTrue(new IntakeCommand(m_intake, 0.67)
+            .whileTrue(new IntakeCommand(m_intake, 1)
         );
 
         // xboxController.rightBumper().whileTrue(new ShooterCommand(
@@ -144,7 +144,7 @@ public class RobotContainer {
         //         m_shooter));
 
         secondaryController.button(1).and(secondaryController.button(3).negate())
-            .whileTrue(new IntakeCommand(m_intake, -0.67)
+            .whileTrue(new IntakeCommand(m_intake, -1)
         );
 
         
