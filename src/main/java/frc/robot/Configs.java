@@ -79,6 +79,13 @@ public final class Configs {
                     .openLoopRampRate(0.05)
                     .smartCurrentLimit(40, 40);
         }
+        public static final SparkMaxConfig kAgitatorConfig = new SparkMaxConfig();
+        static {
+            kAgitatorConfig
+                    .idleMode(IdleMode.kCoast)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
+        }
     }
 
     public static final class IntakeConfig {

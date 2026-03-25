@@ -8,25 +8,20 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkRelativeEncoder;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.Encoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.ShooterConfig;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.VortexMotorConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
     private SparkMax m_spindexer = new SparkMax(ShooterConstants.kSpindexerCanId, MotorType.kBrushless);
     private SparkFlex m_shooter = new SparkFlex(ShooterConstants.kShooterCanId, MotorType.kBrushless);
+    private SparkMax m_agitator = new SparkMax(ShooterConstants.kAgitatorCanId, MotorType.kBrushed);
 
     private RelativeEncoder m_shooterEncoder = m_shooter.getEncoder();
 
@@ -39,6 +34,8 @@ public class ShooterSubsystem extends SubsystemBase {
             PersistMode.kPersistParameters);
         m_shooter.configure(ShooterConfig.kShooterConfig, ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
+        m_agitator.configure(ShooterConfig.kShooterConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
 
         SmartDashboard.putData(this);
     }
@@ -76,7 +73,9 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setSpindexerSpeed(double speed) {
         m_spindexer.set(-speed); // spindexer runs backwards when speed is +
     }
-
+    public void setAgitatorSpeed(double speed) {
+        m_agitator.set(speed);
+    }
     public double getShooterSpeed() {
         return m_shooterEncoder.getVelocity();
     }
