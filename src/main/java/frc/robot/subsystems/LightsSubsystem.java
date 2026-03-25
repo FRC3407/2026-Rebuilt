@@ -35,8 +35,9 @@ public class LightsSubsystem extends SubsystemBase {
     // Animations:
     public static final int LADDER_RED = 0;
     public static final int TEAM_NUMBER = 1;
-    public static final int SHOOTING = 2;
-    public static final int EYES_ANIM = 17;
+    public static final int SHOOTING_GREEN = 2;
+    public static final int SHOOTING_RED = 3;
+    public static final int EYES_ANIM = 67;
 
     private AnimationState[] currentAnimation = new AnimationState[MAX_STRIPS];
     private AnimationState[] nextAnimation = new AnimationState[MAX_STRIPS];
@@ -67,6 +68,7 @@ public class LightsSubsystem extends SubsystemBase {
 
         double distanceToHub = m_drive.distanceToHub();
         boolean optimalShootingDistance = distanceToHub >= 2.7 && distanceToHub <= 3.3;
+        boolean ShooterRunning = m_shooter.getShooterSpeed() != 0.0;
         SmartDashboard.putNumber("LightsSubsystem/distanceToHub", distanceToHub);
         SmartDashboard.putBoolean("LightsSubsystem/optimalShootingDistance", optimalShootingDistance);
 
@@ -79,9 +81,9 @@ public class LightsSubsystem extends SubsystemBase {
         } else if (DriverStation.isAutonomous()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
-            if (m_shooter.getShooterSpeed() != 0.0) {
-                setAnimation(LEFT_PANEL, SHOOTING);
-                setAnimation(RIGHT_PANEL, SHOOTING);
+            if (ShooterRunning) {
+                setAnimation(LEFT_PANEL, SHOOTING_GREEN);
+                setAnimation(RIGHT_PANEL, SHOOTING_GREEN);
             } else {
                 setAnimation(LEFT_PANEL, TEAM_NUMBER);
                 setAnimation(RIGHT_PANEL, TEAM_NUMBER);
@@ -91,11 +93,16 @@ public class LightsSubsystem extends SubsystemBase {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
             if (optimalShootingDistance) {
-                setAnimation(LEFT_PANEL, LADDER_RED);
-                setAnimation(RIGHT_PANEL, LADDER_RED);
-            } else if (m_shooter.getShooterSpeed() != 0.0) {
-                setAnimation(LEFT_PANEL, SHOOTING);
-                setAnimation(RIGHT_PANEL, SHOOTING);
+                if (ShooterRunning) {
+                    setAnimation(LEFT_PANEL, SHOOTING_RED);
+                    setAnimation(RIGHT_PANEL, SHOOTING_RED);
+                } else {
+                    setAnimation(LEFT_PANEL, LADDER_RED);
+                    setAnimation(RIGHT_PANEL, LADDER_RED);
+                }
+            } else if (ShooterRunning) {
+                setAnimation(LEFT_PANEL, SHOOTING_GREEN);
+                setAnimation(RIGHT_PANEL, SHOOTING_GREEN);
             } else {
                 setAnimation(LEFT_PANEL, TEAM_NUMBER);
                 setAnimation(RIGHT_PANEL, TEAM_NUMBER);
