@@ -46,6 +46,7 @@ public class AnotherAutoShootCommand extends Command {
 
         if (time.hasElapsed(1.5)) {
             shooterSubsystem.setSpindexerSpeed(1);
+            shooterSubsystem.setAgitatorSpeed(1);
         } else {
             shooterSubsystem.setSpindexerSpeed(0);
 

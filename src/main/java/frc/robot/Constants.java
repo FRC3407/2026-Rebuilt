@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -147,6 +148,10 @@ public final class Constants {
         public static final double kFreeSpeedRpm = 6784;
     }
 
+    // public  static final class WindowMotorConstants {
+        
+    // }
+
     public static final class VisionConstants {
         public static final AprilTagFields kFieldLayout = AprilTagFields.k2026RebuiltWelded;
         public static final double kMaxAmbiguity = 0.10;
@@ -157,6 +162,7 @@ public final class Constants {
 
         public static final int kShooterCanId = 16; // vortex motor
         public static final int kSpindexerCanId = 13; // neo motor
+        public static final int kAgitatorCanId = 12; // window motor
 
         public static final double launcherHeight = Units.inchesToMeters(40); // approximate, get better measurements
         public static final double launchAngle = Math.atan2(4.5, 2.25); // also approximate, get better measurements
