@@ -74,7 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
         m_spindexer.set(-speed); // spindexer runs backwards when speed is +
     }
     public void setAgitatorSpeed(double speed) {
-        m_agitator.set(speed);
+        m_agitator.set(-speed);
     }
     public double getShooterSpeed() {
         return m_shooterEncoder.getVelocity();

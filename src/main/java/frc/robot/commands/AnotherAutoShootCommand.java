@@ -49,7 +49,7 @@ public class AnotherAutoShootCommand extends Command {
             shooterSubsystem.setAgitatorSpeed(1);
         } else {
             shooterSubsystem.setSpindexerSpeed(0);
-
+            shooterSubsystem.setAgitatorSpeed(0);
         }
     }
 
@@ -58,6 +58,7 @@ public class AnotherAutoShootCommand extends Command {
     public void end(boolean interrupted) {
         shooterSubsystem.setShooterSpeed(0);
         shooterSubsystem.setSpindexerSpeed(0);
+        shooterSubsystem.setAgitatorSpeed(0);
     }
 
     // Returns true when the command should end.
