@@ -214,7 +214,7 @@ public class RobotContainer {
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new ShooterCommand(() -> 1.0, m_shooter));
+        NamedCommands.registerCommand("shoot", new AnotherAutoShootCommand(m_shooter, m_robotDrive));
         NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
         NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
         NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, -125).withTimeout(3));
