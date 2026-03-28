@@ -17,6 +17,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.IntakeConfig;
 import frc.robot.Constants.IntakeConstants;
@@ -51,19 +52,20 @@ public class IntakeSubsystem extends SubsystemBase {
             m_Encoder.setPosition(0);
         }
         if (m_bottomlimitSwitch.isPressed()){
-            deploy_offset = -125 - m_Encoder.getPosition(); 
+            m_Encoder.setPosition(deployAngle);
+            // deploy_offset = IntakeConstants.deployAngle - m_Encoder.getPosition(); why
         }
         if (timer.hasElapsed(4.0)) {
             stopDeploy();
         }
         if (isDeploying) {
-            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition() + deploy_offset , set_point), -maxSpeed, maxSpeed);
+            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition() , set_point), -maxSpeed, maxSpeed);
             m_deployMotor.set(motor_speed);
-            if (Math.abs(m_Encoder.getPosition() + deploy_offset - set_point) < minError) {
+            if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
                 stopDeploy();
             }
         }
-
+        SmartDashboard.putNumber("deploy positon", m_Encoder.getPosition());
     }
 
     public void setIntakeSpeed(double speed) {
@@ -71,10 +73,14 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setSetPoint(double point) {
+        System.out.println("setpoint: "+set_point+" -> "+point);
         set_point = point;
         startDeploy();
     }
 
+    public void setDeploySpeed(double speed) {
+        m_deployMotor.set(0.3);
+    }
 
     /** Deploys the intake out */
     public void startDeploy() {

@@ -1,10 +1,9 @@
 package frc.robot;
 
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -75,6 +74,13 @@ public final class Configs {
         public static final SparkMaxConfig kSpindexerConfig = new SparkMaxConfig();
         static {
             kSpindexerConfig
+                    .idleMode(IdleMode.kCoast)
+                    .openLoopRampRate(0.05)
+                    .smartCurrentLimit(40, 40);
+        }
+        public static final SparkMaxConfig kAgitatorConfig = new SparkMaxConfig();
+        static {
+            kAgitatorConfig
                     .idleMode(IdleMode.kCoast)
                     .openLoopRampRate(0.05)
                     .smartCurrentLimit(40, 40);

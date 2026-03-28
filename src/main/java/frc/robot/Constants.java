@@ -5,13 +5,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -147,6 +144,10 @@ public final class Constants {
         public static final double kFreeSpeedRpm = 6784;
     }
 
+    // public  static final class WindowMotorConstants {
+        
+    // }
+
     public static final class VisionConstants {
         public static final AprilTagFields kFieldLayout = AprilTagFields.k2026RebuiltWelded;
         public static final double kMaxAmbiguity = 0.10;
@@ -156,7 +157,8 @@ public final class Constants {
         public static final double kShooterWheelFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
 
         public static final int kShooterCanId = 16; // vortex motor
-        public static final int kSpindexerCanId = 13; // neo motor
+        public static final int kSpindexerCanId = 13; // neo motor11
+        public static final int kAgitatorCanId = 12; // window motor
 
         public static final double launcherHeight = Units.inchesToMeters(40); // approximate, get better measurements
         public static final double launchAngle = Math.atan2(4.5, 2.25); // also approximate, get better measurements
@@ -169,5 +171,6 @@ public final class Constants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
         public static final int kDeployLeftCanId = 10;
+        public static final int deployAngle = -151;
     }
 }

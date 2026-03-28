@@ -29,6 +29,7 @@ public class AnotherAutoShootCommand extends Command {
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
         builder.addDoubleProperty("auto shoot speed", () -> getShooterSpeed(driveSubsystem.distanceToHub()), null);
+        builder.addDoubleProperty("rel speed", () -> shooterSubsystem.getShooterSpeed() / (getShooterSpeed(driveSubsystem.distanceToHub()) * 5500), null);
     }
 
 
@@ -42,13 +43,13 @@ public class AnotherAutoShootCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        shooterSubsystem.setShooterSpeed(getShooterSpeed(driveSubsystem.distanceToHub()));
+        double speed = getShooterSpeed(driveSubsystem.distanceToHub());
+        shooterSubsystem.setShooterSpeed(speed);
 
-        if (time.hasElapsed(1.5)) {
+        if (shooterSubsystem.getShooterSpeed() > 0.9 * speed * shooterSubsystem.scalingFactor) {
+            System.out.println("up to speed");
             shooterSubsystem.setSpindexerSpeed(1);
-        } else {
-            shooterSubsystem.setSpindexerSpeed(0);
-
+            shooterSubsystem.setAgitatorSpeed(1);
         }
     }
 
@@ -57,6 +58,7 @@ public class AnotherAutoShootCommand extends Command {
     public void end(boolean interrupted) {
         shooterSubsystem.setShooterSpeed(0);
         shooterSubsystem.setSpindexerSpeed(0);
+        shooterSubsystem.setAgitatorSpeed(0);
     }
 
     // Returns true when the command should end.
