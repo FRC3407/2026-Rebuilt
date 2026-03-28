@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "deploy"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
