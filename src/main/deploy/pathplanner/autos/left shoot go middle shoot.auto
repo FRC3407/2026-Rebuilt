@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "deploy"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -43,12 +49,6 @@
                 "type": "named",
                 "data": {
                   "name": "shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "deploy"
                 }
               }
             ]
