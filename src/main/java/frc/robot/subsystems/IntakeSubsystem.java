@@ -52,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
             m_Encoder.setPosition(0);
         }
         if (m_bottomlimitSwitch.isPressed()){
-            m_Encoder.setPosition(deployAngle);
+            m_Encoder.setPosition(IntakeConstants.deployAngle);
             // deploy_offset = IntakeConstants.deployAngle - m_Encoder.getPosition(); why
         }
         if (timer.hasElapsed(4.0)) {
