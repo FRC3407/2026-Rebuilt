@@ -37,7 +37,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.tagLayout = AprilTagFieldLayout.loadField(VisionConstants.kFieldLayout);
 
         // Portside
-        cameraList.add(new PhotonVisionCamera("Arducam_OV9281_USB_Camera", this.tagLayout, new Transform3d(
+        cameraList.add(new PhotonVisionCamera("Left_Camera", this.tagLayout, new Transform3d(
                 new Translation3d(
                         Units.inchesToMeters(-3.5), // 3.5" backwards
                         Units.inchesToMeters(12.0), // 12" left
@@ -48,7 +48,7 @@ public class VisionSubsystem extends SubsystemBase {
                         Rotation2d.fromDegrees(90.0).getRadians())))); // yaw
         
         // Starboard camera
-        cameraList.add(new PhotonVisionCamera("Arducam_OV9281_USB_Camera (1)", this.tagLayout, new Transform3d(
+        cameraList.add(new PhotonVisionCamera("Right_Camera", this.tagLayout, new Transform3d(
                 new Translation3d(
                         Units.inchesToMeters(-3.5), // 3.5" backwards
                         Units.inchesToMeters(-12.0), // 12" right
