@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
@@ -114,7 +115,7 @@ public class RobotContainer {
                 m_robotDrive));
         
         // -120 is all the way out
-        secondaryController.button(6).onTrue(new DeployCommand(m_intake, -125));
+        secondaryController.button(6).onTrue(new DeployCommand(m_intake, IntakeConstants.deployAngle));
 
         // go back in
         secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
@@ -156,18 +157,22 @@ public class RobotContainer {
 
         secondaryController.button(5).whileTrue(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(1);
+            m_shooter.setAgitatorSpeed(1);
         }));
       
-        secondaryController.button(10).whileTrue(new InstantCommand(() -> {
-            m_shooter.setSpindexerSpeed(-1);
-        }));
+        // secondaryController.button(10).whileTrue(new InstantCommand(() -> {
+        //     m_shooter.setSpindexerSpeed(-1);
+        //     m_shooter.setAgitatorSpeed(-1);
+        // }));
 
           secondaryController.button(5).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
+            m_shooter.setAgitatorSpeed(0);
         }));
       
         secondaryController.button(10).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
+            m_shooter.setAgitatorSpeed(0);
         }));
 
     }
@@ -214,10 +219,10 @@ public class RobotContainer {
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new ShooterCommand(() -> 1.0, m_shooter));
+        NamedCommands.registerCommand("shoot", new AnotherAutoShootCommand(m_shooter, m_robotDrive));
         NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
         NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
-        NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, -125).withTimeout(3));
+        NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle).withTimeout(3));
 
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
         // TODO: configure additional autonomous routines here
