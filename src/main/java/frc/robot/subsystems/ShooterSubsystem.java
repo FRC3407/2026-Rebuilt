@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private RelativeEncoder m_shooterEncoder = m_shooter.getEncoder();
 
-    private double scalingFactor = 5500;
+    public double scalingFactor = 5500;
     private double targetSpeed;
 
     /** Creates a new ShooterSubsystem. */

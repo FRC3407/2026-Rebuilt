@@ -161,7 +161,7 @@ public final class Constants {
         public static final double kShooterWheelFreeSpeedRps = VortexMotorConstants.kFreeSpeedRpm / 60;
 
         public static final int kShooterCanId = 16; // vortex motor
-        public static final int kSpindexerCanId = 13; // neo motor
+        public static final int kSpindexerCanId = 13; // neo motor11
         public static final int kAgitatorCanId = 12; // window motor
 
         public static final double launcherHeight = Units.inchesToMeters(40); // approximate, get better measurements
@@ -175,5 +175,6 @@ public final class Constants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
         public static final int kDeployLeftCanId = 10;
+        public static final int deployAngle = -151;
     }
 }
