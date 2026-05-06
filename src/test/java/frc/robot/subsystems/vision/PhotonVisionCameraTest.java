@@ -1,10 +1,13 @@
 package frc.robot.subsystems.vision;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -162,7 +165,8 @@ public class PhotonVisionCameraTest {
                 Pose3d pose3d = new Pose3d();
                 EstimatedRobotPose visionEst = new EstimatedRobotPose(pose3d, 0.0, new ArrayList<PhotonTrackedTarget>(),
                         PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR); // Simulate a valid pose
-                return new VisionPoseEstimate(visionEst);
+                        Collection<Integer> idList = new TreeSet<>(Arrays.asList(15, 5));
+                return new VisionPoseEstimate(visionEst, idList);
             }
         };
 

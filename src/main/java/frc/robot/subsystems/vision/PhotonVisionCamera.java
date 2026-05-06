@@ -1,10 +1,12 @@
 package frc.robot.subsystems.vision;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -56,8 +58,7 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return the estimated field-centric pose of the robot, or
-     *         {@code null}.
+     * @return the estimated field-centric pose of the robot, or {@code null}.
      */
     @Override
     public VisionPoseEstimate getEstimatedRobotPose() {
@@ -68,7 +69,18 @@ public class PhotonVisionCamera implements VisionCamera {
                 visionEst = estimateBestPose(pipelineResult);
             }
         }
-        return visionEst.isPresent() ? new VisionPoseEstimate(visionEst.get()) : null;
+        if (!visionEst.isPresent()) {
+            return null;
+        }
+        return new VisionPoseEstimate(visionEst.get(), addFiducialIDs(visionEst.get()));
+    }
+
+    private Collection<Integer> addFiducialIDs(EstimatedRobotPose visionEst) {
+        Collection<Integer> fiducialIDList = new TreeSet<>();
+        for (PhotonTrackedTarget target : visionEst.targetsUsed) {
+            fiducialIDList.add(target.fiducialId);
+        }
+        return fiducialIDList;
     }
 
     private Optional<EstimatedRobotPose> estimateBestPose(PhotonPipelineResult pipelineResult) {
@@ -80,7 +92,7 @@ public class PhotonVisionCamera implements VisionCamera {
 
     /**
      * @return True if the camera is actively sending frame data, false
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean isConnected() {
@@ -117,8 +129,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return whether the observed target is on a list of IDs. If the ID
-     *         list is empty, then match any target.
+     * @return whether the observed target is on a list of IDs. If the ID list
+     * is empty, then match any target.
      */
     private boolean isFiducialListMatch(PhotonTrackedTarget target, Integer... fiducialIDs) {
         if (fiducialIDs == null || fiducialIDs.length == 0) {
@@ -133,8 +145,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * Convert a pipeline result and target to an {@code AprilTag} object
-     * with a field-relative {@code Pose3d}.
+     * Convert a pipeline result and target to an {@code AprilTag} object with a
+     * field-relative {@code Pose3d}.
      */
     private AprilTag toAprilTag(PhotonPipelineResult pipelineResult, PhotonTrackedTarget target) {
         Optional<EstimatedRobotPose> visionEst = estimateBestPose(pipelineResult);
@@ -156,8 +168,7 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return whether this target should be excluded from vision
-     *         processing.
+     * @return whether this target should be excluded from vision processing.
      */
     private boolean isBadTarget(PhotonTrackedTarget target) {
         return target.getPoseAmbiguity() > VisionConstants.kMaxAmbiguity;
@@ -165,7 +176,7 @@ public class PhotonVisionCamera implements VisionCamera {
 
     /**
      * @return List of all {@code PhotonTrackedTarget} objects that are not
-     *         "bad".
+     * "bad".
      */
     List<PhotonTrackedTarget> makeGoodTargetList(PhotonPipelineResult pipelineResult,
             Comparator<PhotonTrackedTarget> targetComparator) {
@@ -186,6 +197,6 @@ public class PhotonVisionCamera implements VisionCamera {
 
     @Override
     public String toString() {
-        return "PhotonVisionCamera[" + this.camera + "]";
+        return "PhotonVisionCamera[" + this.camera.getName() + "]";
     }
 }
