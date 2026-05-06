@@ -4,18 +4,15 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Newton;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
             m_Encoder.setPosition(0);
         }
         if (m_bottomlimitSwitch.isPressed()){
-            m_Encoder.setPosition(deployAngle);
+            m_Encoder.setPosition(IntakeConstants.deployAngle);
             // deploy_offset = IntakeConstants.deployAngle - m_Encoder.getPosition(); why
         }
         if (timer.hasElapsed(4.0)) {
