@@ -144,7 +144,7 @@ public class VisionSubsystem extends SubsystemBase {
         } else if (DriverStation.isTeleop()) {
             return Robotstate.TELEOP;
         } else if (DriverStation.isTest()) {
-            return Robotstate.AUTONOMOUS.TEST;
+            return Robotstate.TEST;
         } else {
             return Robotstate.NONE;
         }
