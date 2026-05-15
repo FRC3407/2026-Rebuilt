@@ -28,12 +28,14 @@ public class ShooterCommand extends Command {
     public void execute() {
         final double howMuchTrigger = MathUtil.applyDeadband(triggerAxis.getAsDouble(), OIConstants.kDriveDeadband);
         shooterSubsystem.setSpindexerSpeed(howMuchTrigger);
+        shooterSubsystem.setAgitatorSpeed(howMuchTrigger);
         shooterSubsystem.setShooterSpeed(howMuchTrigger);
     }
 
     @Override
     public void end(boolean interrupted) {
         shooterSubsystem.setShooterSpeed(0);
+        shooterSubsystem.setAgitatorSpeed(0);
         shooterSubsystem.setSpindexerSpeed(0);
     }
 }
