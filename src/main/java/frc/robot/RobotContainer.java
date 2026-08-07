@@ -116,9 +116,11 @@ public class RobotContainer {
         
         // -120 is all the way out
         secondaryController.button(6).onTrue(new DeployCommand(m_intake, IntakeConstants.deployAngle));
+        secondaryController.button(6).onFalse(new InstantCommand(m_intake::stopDeploy));
 
         // go back in
         secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
+        secondaryController.button(12).onFalse(new InstantCommand(m_intake::stopDeploy));
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
