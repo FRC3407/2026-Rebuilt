@@ -73,10 +73,10 @@ public class LightsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("LightsSubsystem/optimalShootingDistance", optimalShootingDistance);
 
         if (DriverStation.isDisabled() || DriverStation.isTest()) {
-            setAnimation(LEFT_PANEL, TEAM_NUMBER);
-            setAnimation(RIGHT_PANEL, TEAM_NUMBER);
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);
+            setAnimation(LEFT_PANEL, TEAM_NUMBER);
+            setAnimation(RIGHT_PANEL, TEAM_NUMBER);
 
         } else if (DriverStation.isAutonomous()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
@@ -89,6 +89,11 @@ public class LightsSubsystem extends SubsystemBase {
                 setAnimation(RIGHT_PANEL, TEAM_NUMBER);
             }
 
+        } else if (SmartDashboard.getBoolean("Slow Mode", false)) { // give indication if slowmode is on. probably should be yellow.
+            setAnimation(LEFT_EYE, EYES_ANIM);
+            setAnimation(RIGHT_EYE, EYES_ANIM);                // make actually good
+            setAnimation(LEFT_PANEL, SHOOTING_GREEN);
+            setAnimation(RIGHT_PANEL, SHOOTING_GREEN);
         } else if (DriverStation.isTeleop()) {
             setAnimation(LEFT_EYE, EYES_ANIM);
             setAnimation(RIGHT_EYE, EYES_ANIM);

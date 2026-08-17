@@ -37,13 +37,13 @@ public class DriveCommand extends Command {
         this.rotStick = rotStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
-        SmartDashboard.putBoolean("Slow Mode", true);
+        SmartDashboard.putBoolean("Slow Mode", false); // i set it to false by default
         SmartDashboard.putNumber("Slow Speed", 0.15);
     }
 
     @Override
     public void execute() {
-        double factor = SmartDashboard.getBoolean("Slow Mode", true) ? SmartDashboard.getNumber("Slow Speed", 0.1) : 1.0;
+        double factor = SmartDashboard.getBoolean("Slow Mode", false) ? SmartDashboard.getNumber("Slow Speed", 0.1) : 1.0; // slow factor is 0.1 if slow mode is enabled, otherwise 1.0
         double xSpeed = factor * MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
         double ySpeed = factor * MathUtil.applyDeadband(sidewaysStick.getAsDouble() * Math.abs(sidewaysStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
         double rot = factor * MathUtil.applyDeadband(rotStick.getAsDouble() * Math.abs(rotStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
