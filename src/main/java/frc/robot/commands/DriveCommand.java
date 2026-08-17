@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -36,13 +37,16 @@ public class DriveCommand extends Command {
         this.rotStick = rotStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
+        SmartDashboard.putBoolean("Slow Mode", true);
+        SmartDashboard.putNumber("Slow Speed", 0.15);
     }
 
     @Override
     public void execute() {
-        double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
-        double ySpeed = MathUtil.applyDeadband(sidewaysStick.getAsDouble() * Math.abs(sidewaysStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
-        double rot = MathUtil.applyDeadband(rotStick.getAsDouble() * Math.abs(rotStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
+        double factor = SmartDashboard.getBoolean("Slow Mode", true) ? SmartDashboard.getNumber("Slow Speed", 0.1) : 1.0;
+        double xSpeed = factor * MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
+        double ySpeed = factor * MathUtil.applyDeadband(sidewaysStick.getAsDouble() * Math.abs(sidewaysStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
+        double rot = factor * MathUtil.applyDeadband(rotStick.getAsDouble() * Math.abs(rotStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
 
     }
