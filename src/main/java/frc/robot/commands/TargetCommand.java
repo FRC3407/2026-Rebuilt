@@ -27,7 +27,7 @@ public class TargetCommand extends Command {
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
     private final PIDController targetLockPID = new PIDController(targetProportional, targetIntegral, targetDerivative);
-
+    private Rotation2d relative_rotation = null;
     /**
      * Drive the robot using joysticks.
      * 
@@ -51,7 +51,6 @@ public class TargetCommand extends Command {
         builder.addDoubleProperty("Integral", () -> targetLockPID.getI(), (i) -> targetLockPID.setI(i));
         builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
     }
-
     @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
@@ -68,8 +67,22 @@ public class TargetCommand extends Command {
         Distance deltay = tagy.minus(y);
         Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
         Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
-        Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
+        relative_rotation = ang.relativeTo(angle_to_target_radians);
         double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
         driveSubsystem.drive(xSpeed, ySpeed, rot, true);
+    }
+    @Override
+    public boolean isFinished() {
+        if(relative_rotation != null){
+            if(Math.abs(relative_rotation.getDegrees()) < 2){
+                return true;
+            }   
+            else {
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
 }
