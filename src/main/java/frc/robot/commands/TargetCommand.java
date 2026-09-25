@@ -41,8 +41,8 @@ public class TargetCommand extends Command {
         this.sidewaysStick = sidewaysStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
-        SmartDashboard.putData("Target PID", this);
-    }
+        SmartDashboard.putData("Target Command", this);
+        }
 
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -50,6 +50,7 @@ public class TargetCommand extends Command {
         builder.addDoubleProperty("Proportional", () -> targetLockPID.getP(), (p) -> targetLockPID.setP(p));
         builder.addDoubleProperty("Integral", () -> targetLockPID.getI(), (i) -> targetLockPID.setI(i));
         builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
+        builder.addDoubleProperty("relative rotation to hub", () -> relative_rotation.getDegrees(), null);
     }
     @Override
     public void execute() {
