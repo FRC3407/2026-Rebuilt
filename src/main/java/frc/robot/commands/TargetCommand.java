@@ -52,6 +52,11 @@ public class TargetCommand extends Command {
         builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
         builder.addDoubleProperty("relative rotation to hub", () -> relative_rotation.getDegrees(), null);
     }
+    public Pose2d getShooterTransformed(){
+        Pose2d currentpose = driveSubsystem.getPose();
+        currentpose = currentpose.transformBy(shooterTransform);
+        return currentpose;
+    }
     @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
