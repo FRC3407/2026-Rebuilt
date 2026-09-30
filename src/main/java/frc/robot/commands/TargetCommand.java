@@ -77,7 +77,7 @@ public class TargetCommand extends Command {
         }
         else{
             driveSubsystem.drive(xSpeed, ySpeed, 0, true);
-        }
+        }   
     }
     //ends command when within target deadband
     @Override
