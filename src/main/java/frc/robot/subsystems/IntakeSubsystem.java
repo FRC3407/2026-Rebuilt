@@ -51,14 +51,13 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         double maxSpeed = 0.3;
-        if (m_toplimitSwitch.isPressed()){ // Intake is fully retracted.
+        if (m_bottomlimitSwitch.isPressed()){ // Intake is fully retracted.
             m_Encoder.setPosition(0);
         }
-        // if (m_bottomlimitSwitch.isPressed()){
+        // if (m_toplimitSwitch.isPressed()){ // Intake is fully extended.
         //     m_Encoder.setPosition(IntakeConstants.deployAngle);
-        //     // deploy_offset = IntakeConstants.deployAngle - m_Encoder.getPosition(); why
         // }
-        if (timer.hasElapsed(4.0)) {
+        if (timer.hasElapsed(8.0)) {
             stopDeploy();
         }
         if (isDeploying) {
@@ -71,8 +70,8 @@ public class IntakeSubsystem extends SubsystemBase {
         }
         SmartDashboard.putNumber("IntakeSubsystem/deploy_position", m_Encoder.getPosition());
         SmartDashboard.putNumber("IntakeSubsystem/set_point", set_point);
-        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_toplimitSwitch.isPressed());
-        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_bottomlimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_toplimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_bottomlimitSwitch.isPressed());
     }
 
     public void setIntakeSpeed(double speed) {
