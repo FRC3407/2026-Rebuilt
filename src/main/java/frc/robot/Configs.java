@@ -91,7 +91,6 @@ public final class Configs {
         public static final SparkMaxConfig kIntakeConfig = new SparkMaxConfig();
         static {
             kIntakeConfig
-                .inverted(true)
                     .idleMode(IdleMode.kCoast)
                     .openLoopRampRate(0.05)
                     .smartCurrentLimit(40, 40);
