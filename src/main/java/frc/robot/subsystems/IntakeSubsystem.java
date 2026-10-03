@@ -57,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
         // if (m_toplimitSwitch.isPressed()){ // Intake is fully extended.
         //     m_Encoder.setPosition(IntakeConstants.deployAngle);
         // }
-        if (timer.hasElapsed(8.0)) {
+        if (timer.hasElapsed(8.0) && isDeploying) {
             stopDeploy();
         }
         if (isDeploying) {
@@ -85,7 +85,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setDeploySpeed(double speed) {
-        m_deployMotor.set(0.3);
+        m_deployMotor.set(speed);
     }
 
     /** Deploys the intake out */
@@ -97,5 +97,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public void stopDeploy() {
         m_deployMotor.set(0);
         isDeploying = false;
+        timer.reset();
     }
 }
