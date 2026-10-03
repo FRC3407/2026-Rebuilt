@@ -14,7 +14,7 @@ public class IntakeDriveCommand extends Command {
     public IntakeDriveCommand(double s, IntakeSubsystem b) {
         this.speed = s;
         this.intakeSubsystem = b;
-        addRequirements(getRequirements());
+        addRequirements(b);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class IntakeDriveCommand extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        return false;
     }
 }
