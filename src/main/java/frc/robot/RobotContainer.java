@@ -26,6 +26,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeDriveCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
@@ -136,7 +137,8 @@ public class RobotContainer {
         //         xboxController::getRightTriggerAxis,
         //         m_shooter));
 
-        // rightJoystick.button(9).whileTrue(new RunCommand(() -> m_intake.setDeploySpeed(-0.5), m_intake) );
+        rightJoystick.button(10).whileTrue(new IntakeDriveCommand(-0.3, m_intake) );
+        rightJoystick.button(11).whileTrue(new IntakeDriveCommand(0.3, m_intake) );
 
         secondaryController.button(1).and(secondaryController.button(3))
             .whileTrue(new IntakeCommand(m_intake, 1)
