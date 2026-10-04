@@ -43,29 +43,35 @@ public class IntakeSubsystem extends SubsystemBase {
 
         m_Encoder.setPosition(0);
         isDeploying = false;
+        SmartDashboard.putNumber("IntakeSubsystem/motor_speed", 0.0);
+        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_toplimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_bottomlimitSwitch.isPressed());
     }
 
     @Override
     public void periodic() {
         double maxSpeed = 0.3;
-        if (m_toplimitSwitch.isPressed()){ //Not sure if top or bottom is actually top or bottom. Switch these if it doesn't work
+        if (m_bottomlimitSwitch.isPressed()){ // Intake is fully retracted.
             m_Encoder.setPosition(0);
         }
-        if (m_bottomlimitSwitch.isPressed()){
-            m_Encoder.setPosition(deployAngle);
-            // deploy_offset = IntakeConstants.deployAngle - m_Encoder.getPosition(); why
-        }
-        if (timer.hasElapsed(4.0)) {
+        // if (m_toplimitSwitch.isPressed()){ // Intake is fully extended.
+        //     m_Encoder.setPosition(IntakeConstants.deployAngle);
+        // }
+        if (timer.hasElapsed(8.0)) {
             stopDeploy();
         }
         if (isDeploying) {
             double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition() , set_point), -maxSpeed, maxSpeed);
             m_deployMotor.set(motor_speed);
+            SmartDashboard.putNumber("IntakeSubsystem/motor_speed", motor_speed);
             if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
                 stopDeploy();
             }
         }
-        SmartDashboard.putNumber("deploy positon", m_Encoder.getPosition());
+        SmartDashboard.putNumber("IntakeSubsystem/deploy_position", m_Encoder.getPosition());
+        SmartDashboard.putNumber("IntakeSubsystem/set_point", set_point);
+        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_toplimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_bottomlimitSwitch.isPressed());
     }
 
     public void setIntakeSpeed(double speed) {
