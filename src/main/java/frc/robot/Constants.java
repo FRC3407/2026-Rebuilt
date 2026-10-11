@@ -167,6 +167,6 @@ public final class Constants {
         /** All Neo */
         public static final int kIntakeCanId = 11;
         public static final int kDeployLeftCanId = 10;
-        public static final int deployAngle = -151;
+        public static final int deployAngle = 200;
     }
 }

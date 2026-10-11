@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,6 +26,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeDriveCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
@@ -135,6 +137,8 @@ public class RobotContainer {
         //         xboxController::getRightTriggerAxis,
         //         m_shooter));
 
+        rightJoystick.button(10).whileTrue(new IntakeDriveCommand(-0.3, m_intake) );
+        rightJoystick.button(11).whileTrue(new IntakeDriveCommand(0.3, m_intake) );
 
         secondaryController.button(1).and(secondaryController.button(3))
             .whileTrue(new IntakeCommand(m_intake, 1)
@@ -159,7 +163,7 @@ public class RobotContainer {
             m_shooter.setSpindexerSpeed(1);
             m_shooter.setAgitatorSpeed(1);
         }));
-      
+    
         // secondaryController.button(10).whileTrue(new InstantCommand(() -> {
         //     m_shooter.setSpindexerSpeed(-1);
         //     m_shooter.setAgitatorSpeed(-1);
