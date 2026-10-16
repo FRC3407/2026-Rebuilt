@@ -31,30 +31,31 @@
                 "data": {
                   "name": "shoot"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "deploy"
-                }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "deadline",
                 "data": {
-                  "pathName": "s3 n3 right start to right mid"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "S3 to N2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -63,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reverse of s3 n3 right start to right mid"
+            "pathName": "N3 to S3"
           }
         },
         {
@@ -73,9 +74,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 5.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              }
+            ]
           }
         }
       ]
