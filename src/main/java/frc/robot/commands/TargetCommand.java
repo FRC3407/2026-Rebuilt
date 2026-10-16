@@ -27,7 +27,7 @@ public class TargetCommand extends Command {
     private final DoubleSupplier forwardStick;
     private final DoubleSupplier sidewaysStick;
     private final PIDController targetLockPID = new PIDController(targetProportional, targetIntegral, targetDerivative);
-
+    private Rotation2d relative_rotation = new Rotation2d();
     /**
      * Drive the robot using joysticks.
      * 
@@ -41,8 +41,8 @@ public class TargetCommand extends Command {
         this.sidewaysStick = sidewaysStick;
         this.driveSubsystem = drive;
         addRequirements(this.driveSubsystem);
-        SmartDashboard.putData("Target PID", this);
-    }
+        SmartDashboard.putData("Target Command", this);
+        }
 
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -50,8 +50,8 @@ public class TargetCommand extends Command {
         builder.addDoubleProperty("Proportional", () -> targetLockPID.getP(), (p) -> targetLockPID.setP(p));
         builder.addDoubleProperty("Integral", () -> targetLockPID.getI(), (i) -> targetLockPID.setI(i));
         builder.addDoubleProperty("Derivative", () -> targetLockPID.getD(), (d) -> targetLockPID.setD(d));
+        builder.addDoubleProperty("relative rotation to hub", () -> relative_rotation.getDegrees(), null);
     }
-
     @Override
     public void execute() {
         double xSpeed = MathUtil.applyDeadband(forwardStick.getAsDouble() * Math.abs(forwardStick.getAsDouble()), OIConstants.kDriveDeadband) * -1;
@@ -68,8 +68,30 @@ public class TargetCommand extends Command {
         Distance deltay = tagy.minus(y);
         Double ang_to_target = Math.atan2(deltay.in(Meter), deltax.in(Meter));
         Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
-        Rotation2d relative_rotation = ang.relativeTo(angle_to_target_radians);
+        relative_rotation = ang.relativeTo(angle_to_target_radians);
         double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
-        driveSubsystem.drive(xSpeed, ySpeed, rot, true);
+        //stop rotation when "close enough" doesn't do anything in teleop, since will be scheduled over by drive command when targetcommand ends, but in autonomous this prevents extra rotation. 
+        if (Math.abs(relative_rotation.getDegrees()) > targetDeadbandDegrees){
+            driveSubsystem.drive(xSpeed, ySpeed, rot, true);
+
+        }
+        else{
+            driveSubsystem.drive(xSpeed, ySpeed, 0, true);
+        }   
+    }
+    //ends command when within target deadband
+    @Override
+    public boolean isFinished() {
+        if(relative_rotation != null){
+            if(Math.abs(relative_rotation.getDegrees()) < targetDeadbandDegrees){
+                return true;
+            }   
+            else {
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
 }
