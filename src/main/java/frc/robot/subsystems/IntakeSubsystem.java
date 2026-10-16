@@ -17,6 +17,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs.IntakeConfig;
 import frc.robot.Constants.IntakeConstants;
@@ -42,28 +43,35 @@ public class IntakeSubsystem extends SubsystemBase {
 
         m_Encoder.setPosition(0);
         isDeploying = false;
+        SmartDashboard.putNumber("IntakeSubsystem/motor_speed", 0.0);
+        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_toplimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_bottomlimitSwitch.isPressed());
     }
 
     @Override
     public void periodic() {
         double maxSpeed = 0.3;
-        if (m_toplimitSwitch.isPressed()){ //Not sure if top or bottom is actually top or bottom. Switch these if it doesn't work
+        if (m_bottomlimitSwitch.isPressed()){ // Intake is fully retracted.
             m_Encoder.setPosition(0);
         }
-        if (m_bottomlimitSwitch.isPressed()){
-            deploy_offset = -125 - m_Encoder.getPosition(); 
-        }
-        if (timer.hasElapsed(4.0)) {
+        // if (m_toplimitSwitch.isPressed()){ // Intake is fully extended.
+        //     m_Encoder.setPosition(IntakeConstants.deployAngle);
+        // }
+        if (timer.hasElapsed(8.0) && isDeploying) {
             stopDeploy();
         }
         if (isDeploying) {
-            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition() + deploy_offset , set_point), -maxSpeed, maxSpeed);
+            double motor_speed = MathUtil.clamp(m_control.calculate(m_Encoder.getPosition() , set_point), -maxSpeed, maxSpeed);
             m_deployMotor.set(motor_speed);
-            if (Math.abs(m_Encoder.getPosition() + deploy_offset - set_point) < minError) {
+            SmartDashboard.putNumber("IntakeSubsystem/motor_speed", motor_speed);
+            if (Math.abs(m_Encoder.getPosition() - set_point) < minError) {
                 stopDeploy();
             }
         }
-
+        SmartDashboard.putNumber("IntakeSubsystem/deploy_position", m_Encoder.getPosition());
+        SmartDashboard.putNumber("IntakeSubsystem/set_point", set_point);
+        SmartDashboard.putBoolean("IntakeSubsystem/outlimitSwitch", m_toplimitSwitch.isPressed());
+        SmartDashboard.putBoolean("IntakeSubsystem/inlimitSwitch", m_bottomlimitSwitch.isPressed());
     }
 
     public void setIntakeSpeed(double speed) {
@@ -71,10 +79,14 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setSetPoint(double point) {
+        System.out.println("setpoint: "+set_point+" -> "+point);
         set_point = point;
         startDeploy();
     }
 
+    public void setDeploySpeed(double speed) {
+        m_deployMotor.set(speed);
+    }
 
     /** Deploys the intake out */
     public void startDeploy() {
@@ -85,5 +97,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public void stopDeploy() {
         m_deployMotor.set(0);
         isDeploying = false;
+        timer.reset();
     }
 }
