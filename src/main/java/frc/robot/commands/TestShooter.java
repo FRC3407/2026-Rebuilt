@@ -35,7 +35,25 @@ public class TestShooter extends Command {
     double shooterSpeed = shooterSubsystem.getShooterSpeed();
     if(timer.hasElapsed(6)) {
       shooterSubsystem.setShooterSpeed(-1);
+    if(shooterSpeed > 0) {
+      testFailed = true;
     }
+    }
+  else if(timer.hasElapsed(4)) {
+    shooterSubsystem.setShooterSpeed(-1);
+    
+  }
+  else if(timer.hasElapsed(2)) {
+    shooterSubsystem.setShooterSpeed(1);
+    if(shooterSpeed < 0) {
+      testFailed = true;
+    }
+  }
+  else {
+    shooterSubsystem.setShooterSpeed(1);
+    
+  }
+    
   }
 
   // Called once the command ends or is interrupted.
