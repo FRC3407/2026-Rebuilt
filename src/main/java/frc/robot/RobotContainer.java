@@ -25,7 +25,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PathfindingConstants;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualDeployCommand;
 import frc.robot.commands.IntakeDriveCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
@@ -137,8 +137,8 @@ public class RobotContainer {
         //         xboxController::getRightTriggerAxis,
         //         m_shooter));
 
-        rightJoystick.button(10).whileTrue(new IntakeCommand(m_intake, -0.3) );
-        rightJoystick.button(11).whileTrue(new IntakeCommand(m_intake, 0.3) );
+        rightJoystick.button(10).whileTrue(new ManualDeployCommand(m_intake, -0.3) );
+        rightJoystick.button(11).whileTrue(new ManualDeployCommand(m_intake, 0.3) );
         secondaryController.button(1).and(secondaryController.button(3))
             .whileTrue(new IntakeDriveCommand(-0.5, m_intake)
         );
@@ -217,7 +217,7 @@ public class RobotContainer {
      */
     private SendableChooser<Command> configureAutonomous() {
         NamedCommands.registerCommand("shoot", new AnotherAutoShootCommand(m_shooter, m_robotDrive));
-        NamedCommands.registerCommand("intake", new IntakeCommand(m_intake, 1));
+        NamedCommands.registerCommand("intake", new IntakeDriveCommand(-0.5, m_intake));
         NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
         NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle).withTimeout(3));
 
