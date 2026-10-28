@@ -169,4 +169,8 @@ public final class Constants {
         public static final int kDeployLeftCanId = 10;
         public static final int deployAngle = 200;
     }
+
+    public static final class TestConstants{
+        public static final double deployTime = 5;
+    }
 }

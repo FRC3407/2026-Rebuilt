@@ -99,4 +99,13 @@ public class IntakeSubsystem extends SubsystemBase {
         isDeploying = false;
         timer.reset();
     }
+    
+    public double getEncoderPos() {
+        return m_Encoder.getPosition();
+    }
+
+    public boolean setPointReached() {
+        return (Math.abs(m_Encoder.getPosition() - set_point) < minError);
+    }
+    
 }
