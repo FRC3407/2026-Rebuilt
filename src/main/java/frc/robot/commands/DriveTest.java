@@ -5,17 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.DriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveTest extends Command {
+  private DriveSubsystem SubsystemDrive;
+  private boolean TestPassed = false;
+  private boolean TestFailed = false;
   /** Creates a new DriveTest. */
-  public DriveTest() {
+  public DriveTest(DriveSubsystem SubsystemDrive) {
+    this.SubsystemDrive = SubsystemDrive;
+    addRequirements(SubsystemDrive);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    TestPassed = false;
+    TestFailed = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
