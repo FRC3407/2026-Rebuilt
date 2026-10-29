@@ -21,4 +21,8 @@ public class BeeperSubsystem extends SubsystemBase {
     public void beep(double seconds) {
         secondsRemaining = seconds;
     }
+
+    public boolean getOutput(){
+        return output.get();
+    }
 }
