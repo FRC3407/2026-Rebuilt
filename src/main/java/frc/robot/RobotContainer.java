@@ -31,6 +31,7 @@ import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
+import frc.robot.commands.TestIntakeDeploy;
 import frc.robot.commands.AnotherAutoShootCommand;
 import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
@@ -178,6 +179,7 @@ public class RobotContainer {
             m_shooter.setSpindexerSpeed(0);
             m_shooter.setAgitatorSpeed(0);
         }));
+        rightJoystick.button(8).onTrue(new TestIntakeDeploy(m_intake));
 
     }
 
