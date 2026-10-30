@@ -41,6 +41,12 @@
               }
             ]
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Victory Celly"
+          }
         }
       ]
     }

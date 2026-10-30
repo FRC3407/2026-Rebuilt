@@ -11,12 +11,17 @@ public class AnotherAutoShootCommand extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
     private final DriveSubsystem driveSubsystem;
+    private double totalShotCount = 0;
+    private double shotCounter = 0;
+    private Boolean fullyRevved = false;
     private Timer time = new Timer();
 
     public static double getShooterSpeed(double distance) {
         return 0.12541 * distance + 0.428443;
     }
-
+    public double getShotCounter(){
+        return shotCounter;
+    }
     public AnotherAutoShootCommand(ShooterSubsystem m_shooter, DriveSubsystem m_drive) {
         this.shooterSubsystem = m_shooter;
         this.driveSubsystem = m_drive;
@@ -30,6 +35,8 @@ public class AnotherAutoShootCommand extends Command {
         super.initSendable(builder);
         builder.addDoubleProperty("auto shoot speed", () -> getShooterSpeed(driveSubsystem.distanceToHub()), null);
         builder.addDoubleProperty("rel speed", () -> shooterSubsystem.getShooterSpeed() / (getShooterSpeed(driveSubsystem.distanceToHub()) * 5500), null);
+        builder.addDoubleProperty("total shot counter", () -> totalShotCount, null);
+        builder.addDoubleProperty("auto shot counter", () -> shotCounter, null);
     }
 
 
@@ -43,13 +50,21 @@ public class AnotherAutoShootCommand extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        double motorSpeed = shooterSubsystem.getShooterSpeed();
         double speed = getShooterSpeed(driveSubsystem.distanceToHub());
+
         shooterSubsystem.setShooterSpeed(speed);
 
-        if (shooterSubsystem.getShooterSpeed() > 0.9 * speed * shooterSubsystem.scalingFactor) {
+        if (motorSpeed > 0.97 * speed * shooterSubsystem.scalingFactor) {
+            fullyRevved = true;
             System.out.println("up to speed");
             shooterSubsystem.setSpindexerSpeed(1);
             shooterSubsystem.setAgitatorSpeed(1);
+        }
+        if (fullyRevved && motorSpeed < 0.95 * speed * shooterSubsystem.scalingFactor){
+            fullyRevved = false;
+            totalShotCount += 1;
+            shotCounter += 1;
         }
     }
 
@@ -59,6 +74,7 @@ public class AnotherAutoShootCommand extends Command {
         shooterSubsystem.setShooterSpeed(0);
         shooterSubsystem.setSpindexerSpeed(0);
         shooterSubsystem.setAgitatorSpeed(0);
+        shotCounter = 0;
     }
 
     // Returns true when the command should end.

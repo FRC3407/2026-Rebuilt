@@ -31,6 +31,12 @@
                 "data": {
                   "name": "shoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "deploy"
+                }
               }
             ]
           }
@@ -46,7 +52,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "S3 to N2"
+                        "pathName": "s3 n3 right start to right mid"
                       }
                     },
                     {
@@ -64,7 +70,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "N3 to S3"
+            "pathName": "Reverse of s3 n3 right start to right mid"
           }
         },
         {

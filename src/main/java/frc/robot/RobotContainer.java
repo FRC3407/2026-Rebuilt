@@ -32,6 +32,7 @@ import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.TargetCommand;
 import frc.robot.commands.AnotherAutoShootCommand;
+import frc.robot.commands.AutonomousAutoShootCommand;
 import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -216,7 +217,7 @@ public class RobotContainer {
      * @return the autonomous chooser.
      */
     private SendableChooser<Command> configureAutonomous() {
-        NamedCommands.registerCommand("shoot", new AnotherAutoShootCommand(m_shooter, m_robotDrive));
+        NamedCommands.registerCommand("shoot", new AutonomousAutoShootCommand(m_shooter, m_robotDrive));
         NamedCommands.registerCommand("intake", new IntakeDriveCommand(-0.5, m_intake));
         NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
         NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle).withTimeout(3));
