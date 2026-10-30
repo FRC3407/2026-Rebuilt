@@ -39,7 +39,7 @@ public class TestShooter extends Command {
         double shooterSpeed = shooterSubsystem.getShooterSpeed();
         if (timer.hasElapsed(6)) {
             shooterSubsystem.setShooterSpeed(-1);
-            if (shooterSpeed > TestConstants.shooterSpeedThreshold) {
+            if (shooterSpeed > -TestConstants.shooterSpeedThreshold) {
                 testFailed = true;
             }
         } else if (timer.hasElapsed(4)) {
@@ -47,7 +47,7 @@ public class TestShooter extends Command {
 
         } else if (timer.hasElapsed(2)) {
             shooterSubsystem.setShooterSpeed(1);
-            if (shooterSpeed < -TestConstants.shooterSpeedThreshold) {
+            if (shooterSpeed < TestConstants.shooterSpeedThreshold) {
                 testFailed = true;
             }
         } else {
@@ -61,6 +61,7 @@ public class TestShooter extends Command {
     @Override
     public void end(boolean interrupted) {
         System.out.println("testShooter = " + testFailed);
+        shooterSubsystem.setShooterSpeed(0);
     }
 
     // Returns true when the command should end.
@@ -76,9 +77,17 @@ public class TestShooter extends Command {
         return false;
     }
 
+    private String getTestStatus() {
+        if(testFailed) {
+            return "failed";
+        } else if (!timer.hasElapsed(7)) {
+        return "test running";
+        } else { return "pass"; }
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
-        builder.addStringProperty("message", () -> testFailed + "", null);
+        builder.addStringProperty("shooter test status", this::getTestStatus, null);
     }
 }
