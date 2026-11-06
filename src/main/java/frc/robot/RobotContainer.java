@@ -140,10 +140,10 @@ public class RobotContainer {
         rightJoystick.button(10).whileTrue(new ManualDeployCommand(m_intake, -0.3) );
         rightJoystick.button(11).whileTrue(new ManualDeployCommand(m_intake, 0.3) );
         secondaryController.button(1).and(secondaryController.button(3))
-            .whileTrue(new IntakeDriveCommand(-0.5, m_intake)
+            .whileTrue(new IntakeDriveCommand(0.5, m_intake)
         );
         secondaryController.button(1).and(secondaryController.button(3).negate())
-            .whileTrue(new IntakeDriveCommand(0.5, m_intake)
+            .whileTrue(new IntakeDriveCommand(-0.5, m_intake)
         );
         
         secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
@@ -157,10 +157,6 @@ public class RobotContainer {
             m_shooter.setAgitatorSpeed(1);
         }));
     
-        // secondaryController.button(10).whileTrue(new InstantCommand(() -> {
-        //     m_shooter.setSpindexerSpeed(-1);
-        //     m_shooter.setAgitatorSpeed(-1);
-        // }));
 
           secondaryController.button(5).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
