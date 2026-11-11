@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
@@ -32,6 +33,7 @@ public class TestIntakeDeploy extends Command {
         intakeSubsystem = intake;
         addRequirements(intake);
     }
+
     @Override
     public void initialize() {
         testFailed = false;
@@ -42,6 +44,7 @@ public class TestIntakeDeploy extends Command {
         TestTimer.start();
         state = CommandState.INITIAL;
     }
+
     @Override
     public void execute() {
         if (state == CommandState.INITIAL) {
@@ -69,17 +72,27 @@ public class TestIntakeDeploy extends Command {
         }
 
     }
+
     @Override
     public void end(boolean interrupted) {
-        if (testPassed = true) {
+        if (testPassed == true) {
             System.out.println("Intake deploy test Passed Yippee!:3");
         }
-        if (testFailed = true) {
+        if (testFailed == true) {
             System.out.println("Intake deploy test FAILED :(");
         }
     }
+
     @Override
     public boolean isFinished() {
         return testFailed || testPassed;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addStringProperty("Message ",
+                () -> "testPassed=" + testPassed + " testFailed=" + testFailed,
+                null);
     }
 }
