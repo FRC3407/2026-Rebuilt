@@ -5,6 +5,7 @@
 // edit, changed formating
 package frc.robot.commands;
 
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,8 @@ import frc.robot.subsystems.VisionSubsystem;
 public class VisionTestCommand extends Command {
     private TestProgress progress;
     private String message;
+    private boolean cameraOneStatus;
+    private boolean cameraTwoStatus;
     private final VisionSubsystem visionSubsystem;
 
     private enum TestProgress {
@@ -30,6 +33,8 @@ public class VisionTestCommand extends Command {
     @Override
     public void initialize() {
         progress = TestProgress.FIRST_CAM;
+        cameraOneStatus = false;
+        cameraTwoStatus = false;
 
     }
 
@@ -41,6 +46,7 @@ public class VisionTestCommand extends Command {
                 progress = TestProgress.SECOND_CAM;
                 System.out.println("WE FOUMND THE FIRST(1) CIMERA!!!!!! :D c: :3");
                 message = "first(1) appel tag funod :3";
+                cameraOneStatus = true;
             }
         }
 
@@ -50,6 +56,7 @@ public class VisionTestCommand extends Command {
                 progress = TestProgress.DONE;
                 System.out.println("we found the second(2) chameras :D");
                 message = "Second(2) april tag foind :3";
+                cameraTwoStatus = true;
 
             }
         }
@@ -68,6 +75,8 @@ public class VisionTestCommand extends Command {
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
         builder.addStringProperty("message", () -> message, null);
+        builder.addBooleanProperty("cameraOneStatus", () -> cameraOneStatus, null);
+        builder.addBooleanProperty("cameraTwoStatus", () -> cameraTwoStatus, null);
     }
 
 }
