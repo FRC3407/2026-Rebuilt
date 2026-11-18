@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -96,8 +97,12 @@ public final class Configs {
                     .smartCurrentLimit(40, 40);
         }
         public static final SparkMaxConfig kDeployLeftConfig = new SparkMaxConfig();
+        public static final LimitSwitchConfig kDeployLimitSwitchConfig = new LimitSwitchConfig();
         static {
+            kDeployLimitSwitchConfig
+                    .reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
             kDeployLeftConfig
+                    .apply(kDeployLimitSwitchConfig)
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(0.05)
                     .smartCurrentLimit(40, 40);
