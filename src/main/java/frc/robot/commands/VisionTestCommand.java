@@ -9,6 +9,7 @@ package frc.robot.commands;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionCamera;
@@ -25,6 +26,7 @@ public class VisionTestCommand extends Command {
 
     public VisionTestCommand(VisionSubsystem eyeSubsystem) {
         visionSubsystem = eyeSubsystem;
+        SmartDashboard.putData("Vision Test Command", this);
         addRequirements(eyeSubsystem);
 
     }

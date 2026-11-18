@@ -234,7 +234,6 @@ public class RobotContainer {
      */
     private void configureDashboard() {
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        SmartDashboard.putData("Vision Test", new VisionTestCommand(m_vision));
 
         m_robotDrive.odometryDisplay.setRobotPose(new Pose2d());
 
