@@ -11,13 +11,7 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "deploy"
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
@@ -27,19 +21,19 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "parallel",
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "shoot"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "shoot"
+                        "name": "deploy"
                       }
                     }
                   ]
