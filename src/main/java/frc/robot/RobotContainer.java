@@ -142,10 +142,10 @@ public class RobotContainer {
         rightJoystick.button(10).whileTrue(new ManualDeployCommand(m_intake, -0.3) );
         rightJoystick.button(11).whileTrue(new ManualDeployCommand(m_intake, 0.3) );
         secondaryController.button(1).and(secondaryController.button(3))
-            .whileTrue(new IntakeDriveCommand(-0.5, m_intake)
+            .whileTrue(new IntakeDriveCommand(0.5, m_intake)
         );
         secondaryController.button(1).and(secondaryController.button(3).negate())
-            .whileTrue(new IntakeDriveCommand(0.5, m_intake)
+            .whileTrue(new IntakeDriveCommand(-0.5, m_intake)
         );
         
         secondaryController.button(2).and(secondaryController.button(4)).whileTrue(new ShooterCommand(
