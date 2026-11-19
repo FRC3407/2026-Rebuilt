@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.vision.VisionCamera;
 
+
 /** This test makes sure the vision is working by testing the cameras individually */
 public class VisionTestCommand extends Command {
     private String message;
@@ -25,10 +26,11 @@ public class VisionTestCommand extends Command {
     private Timer timer;
 
     public VisionTestCommand(VisionSubsystem eyeSubsystem) {
-        visionSubsystem = eyeSubsystem;
+        this.visionSubsystem = eyeSubsystem;
+        this.timer = new Timer();
+        addRequirements(this.visionSubsystem);
+        message = "";
         SmartDashboard.putData("Vision Test Command", this);
-        addRequirements(eyeSubsystem);
-
     }
 
     @Override
@@ -52,7 +54,7 @@ public class VisionTestCommand extends Command {
         if(!cameraTwoIsOn){
             if (visionSubsystem.cameraList.get(1).isConnected()){
                 message = "camera two connected";
-                cameraOneIsOn = true;
+                cameraTwoIsOn = true;
                 }
         }
         if (!cameraOneStatus) {
@@ -98,7 +100,7 @@ public class VisionTestCommand extends Command {
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
         builder.addStringProperty("message", () -> message, null);
-        builder.addBooleanProperty("cameraOneIsOn", () -> cameraTwoIsOn, null);
+        builder.addBooleanProperty("cameraOneIsOn", () -> cameraOneIsOn, null);
         builder.addBooleanProperty("cameraTwoIsOn", () -> cameraTwoIsOn, null);
         builder.addBooleanProperty("cameraOneStatus", () -> cameraOneStatus, null);
         builder.addBooleanProperty("cameraTwoStatus", () -> cameraTwoStatus, null);

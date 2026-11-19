@@ -56,6 +56,7 @@ public class RobotContainer {
     public final ShooterSubsystem m_shooter;
     public final IntakeSubsystem m_intake;
     public final LightsSubsystem m_lights;
+    public final VisionTestCommand ggg;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -83,7 +84,7 @@ public class RobotContainer {
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
         m_lights = new LightsSubsystem(m_vision, m_shooter, m_robotDrive);
-
+        ggg = new VisionTestCommand(m_vision);
         autoChooser = configureAutonomous();
         configureButtonBindings();
         configureDashboard();
@@ -177,7 +178,6 @@ public class RobotContainer {
 
     private void configureSimulation() {
         xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
-
         // Start the robot in an orientation that will make it easier to drive in
         // simulation.
         m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
@@ -234,7 +234,7 @@ public class RobotContainer {
      */
     private void configureDashboard() {
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
+        
         m_robotDrive.odometryDisplay.setRobotPose(new Pose2d());
 
         m_robotDrive.gyroDisplay.setNumber(0.0);
