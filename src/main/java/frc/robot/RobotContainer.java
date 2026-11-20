@@ -30,8 +30,11 @@ import frc.robot.commands.IntakeDriveCommand;
 import frc.robot.commands.PointCommand;
 import frc.robot.commands.ShootTestCommand;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.StopDeployCommand;
 import frc.robot.commands.TargetCommand;
+import frc.robot.commands.VisionTestCommand;
 import frc.robot.commands.AnotherAutoShootCommand;
+import frc.robot.commands.AutonomousTargetCommand;
 import frc.robot.commands.DeployCommand;
 import frc.robot.subsystems.BeeperSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -55,6 +58,7 @@ public class RobotContainer {
     public final ShooterSubsystem m_shooter;
     public final IntakeSubsystem m_intake;
     public final LightsSubsystem m_lights;
+    public final VisionTestCommand ggg;
     // The driver's controllers
     private final CommandJoystick leftJoystick = new CommandJoystick(OIConstants.kLeftJoystickPort);
     private final CommandJoystick rightJoystick = new CommandJoystick(OIConstants.kRightJoystickPort);
@@ -82,7 +86,7 @@ public class RobotContainer {
         m_shooter = new ShooterSubsystem();
         m_intake = new IntakeSubsystem();
         m_lights = new LightsSubsystem(m_vision, m_shooter, m_robotDrive);
-
+        ggg = new VisionTestCommand(m_vision);
         autoChooser = configureAutonomous();
         configureButtonBindings();
         configureDashboard();
@@ -116,11 +120,16 @@ public class RobotContainer {
                 rightJoystick::getX,
                 m_robotDrive));
         
-        // -120 is all the way out
+        // 160 is all the way out
         secondaryController.button(6).onTrue(new DeployCommand(m_intake, IntakeConstants.deployAngle));
 
         // go back in
         secondaryController.button(12).onTrue(new DeployCommand(m_intake, 0));
+        
+        // go to middle position when not deploy or reversed
+        (secondaryController.button(12).negate()).and(secondaryController.button(6).negate())
+            .whileTrue(new StopDeployCommand(m_intake)
+        );
 
         leftJoystick.trigger().whileTrue(new PointCommand(
                 rightJoystick::getY,
@@ -129,16 +138,17 @@ public class RobotContainer {
                 leftJoystick::getY,
                 m_robotDrive));
 
-        // Button 7 on the right stick resets the gyro
-        rightJoystick.button(7).onTrue(
+        // Button 11 on the right stick resets the gyro
+        rightJoystick.button(11).onTrue(
                 new InstantCommand(m_robotDrive::zeroHeading));
 
         // m_shooter.setDefaultCommand(new ShooterCommand(
         //         xboxController::getRightTriggerAxis,
         //         m_shooter));
-
-        rightJoystick.button(10).whileTrue(new ManualDeployCommand(m_intake, -0.3) );
-        rightJoystick.button(11).whileTrue(new ManualDeployCommand(m_intake, 0.3) );
+        //Manual Deploy is now on those top two buttons on the left joystick because those are the only ones that work :(
+        leftJoystick.button(2).whileTrue(new ManualDeployCommand(m_intake, -0.3) );
+        leftJoystick.button(3).whileTrue(new ManualDeployCommand(m_intake, 0.3) );
+        //intake binds
         secondaryController.button(1).and(secondaryController.button(3))
             .whileTrue(new IntakeDriveCommand(0.5, m_intake)
         );
@@ -157,6 +167,10 @@ public class RobotContainer {
             m_shooter.setAgitatorSpeed(1);
         }));
     
+        // secondaryController.button(10).whileTrue(new InstantCommand(() -> {
+        //     m_shooter.setSpindexerSpeed(-1);
+        //     m_shooter.setAgitatorSpeed(-1);
+        // }));
 
           secondaryController.button(5).onFalse(new InstantCommand(() -> {
             m_shooter.setSpindexerSpeed(0);
@@ -172,7 +186,6 @@ public class RobotContainer {
 
     private void configureSimulation() {
         xboxController = new CommandXboxController(OIConstants.kXboxControllerPort);
-
         // Start the robot in an orientation that will make it easier to drive in
         // simulation.
         m_robotDrive.resetOdometry(new Pose2d(2, 2, Rotation2d.fromDegrees(90)));
@@ -214,7 +227,7 @@ public class RobotContainer {
     private SendableChooser<Command> configureAutonomous() {
         NamedCommands.registerCommand("shoot", new AnotherAutoShootCommand(m_shooter, m_robotDrive));
         NamedCommands.registerCommand("intake", new IntakeDriveCommand(-0.5, m_intake));
-        NamedCommands.registerCommand("target", new TargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
+        NamedCommands.registerCommand("target", new AutonomousTargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
         NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle).withTimeout(3));
 
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
@@ -229,7 +242,7 @@ public class RobotContainer {
      */
     private void configureDashboard() {
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
+        
         m_robotDrive.odometryDisplay.setRobotPose(new Pose2d());
 
         m_robotDrive.gyroDisplay.setNumber(0.0);
