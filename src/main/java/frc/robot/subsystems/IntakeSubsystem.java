@@ -99,4 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
         isDeploying = false;
         timer.reset();
     }
+    public double getAngle(){
+        return m_Encoder.getPosition();
+    }
 }
