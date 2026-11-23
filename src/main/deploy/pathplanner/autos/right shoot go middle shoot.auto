@@ -23,13 +23,19 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "deploy"
                 }
               }
             ]
@@ -46,7 +52,26 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "S3 to N2"
+                        "pathName": "s3 n3 right start to right mid"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reverse of s3 n3 right start to right mid"
                       }
                     },
                     {
@@ -62,31 +87,25 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "N3 to S3"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "target"
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 5.0
+                  "name": "shoot"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "half deploy"
                 }
               }
             ]

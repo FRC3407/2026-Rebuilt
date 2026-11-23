@@ -70,28 +70,10 @@ public class TargetCommand extends Command {
         Rotation2d angle_to_target_radians = new Rotation2d(ang_to_target);
         relative_rotation = ang.relativeTo(angle_to_target_radians);
         double rot = MathUtil.clamp(targetLockPID.calculate(relative_rotation.getRadians(), 0), -1, 1);
-        //stop rotation when "close enough" doesn't do anything in teleop, since will be scheduled over by drive command when targetcommand ends, but in autonomous this prevents extra rotation. 
-        if (Math.abs(relative_rotation.getDegrees()) > targetDeadbandDegrees){
-            driveSubsystem.drive(xSpeed, ySpeed, rot, true);
-
-        }
-        else{
-            driveSubsystem.drive(xSpeed, ySpeed, 0, true);
-        }   
+        driveSubsystem.drive(xSpeed, ySpeed, rot, true);
     }
-    //ends command when within target deadband
     @Override
     public boolean isFinished() {
-        if(relative_rotation != null){
-            if(Math.abs(relative_rotation.getDegrees()) < targetDeadbandDegrees){
-                return true;
-            }   
-            else {
-                return false;
-            }
-        }
-        else{
-            return false;
-        }
+        return false;
     }
 }

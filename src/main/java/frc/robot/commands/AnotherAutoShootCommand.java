@@ -30,6 +30,7 @@ public class AnotherAutoShootCommand extends Command {
         super.initSendable(builder);
         builder.addDoubleProperty("auto shoot speed", () -> getShooterSpeed(driveSubsystem.distanceToHub()), null);
         builder.addDoubleProperty("rel speed", () -> shooterSubsystem.getShooterSpeed() / (getShooterSpeed(driveSubsystem.distanceToHub()) * 5500), null);
+        
     }
 
 

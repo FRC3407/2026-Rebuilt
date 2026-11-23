@@ -23,7 +23,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -61,9 +61,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Reverse of s1 to n1 left start to left mid"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reverse of s1 to n1 left start to left mid"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
           }
         },
         {
@@ -73,9 +86,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "half deploy"
+                }
+              }
+            ]
           }
         }
       ]

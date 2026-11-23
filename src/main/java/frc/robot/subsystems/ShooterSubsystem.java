@@ -47,6 +47,8 @@ public class ShooterSubsystem extends SubsystemBase {
         builder.addDoubleProperty("motor speed", m_shooterEncoder::getVelocity, null);
         builder.addDoubleProperty("target speed", () -> targetSpeed, null);
         builder.addDoubleProperty("rpm scaling factor", () -> scalingFactor, null);
+        builder.addDoubleProperty("spindex speed", () -> m_spindexer.get(), null);
+
     }
 
     @Override
