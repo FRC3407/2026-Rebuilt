@@ -23,13 +23,19 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "deploy"
                 }
               }
             ]
@@ -57,14 +63,27 @@
                     }
                   ]
                 }
+              },
+              {
+                "type": "deadline",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reverse of s3 n3 right start to right mid"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reverse of s3 n3 right start to right mid"
           }
         },
         {
@@ -74,19 +93,19 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 5.0
+                  "name": "shoot"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "half deploy"
                 }
               }
             ]

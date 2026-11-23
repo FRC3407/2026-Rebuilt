@@ -229,7 +229,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("intake", new IntakeDriveCommand(-0.5, m_intake));
         NamedCommands.registerCommand("target", new AutonomousTargetCommand(() -> 0.0, () -> 0.0, m_robotDrive));
         NamedCommands.registerCommand("deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle).withTimeout(3));
-
+        NamedCommands.registerCommand("half deploy", new DeployCommand(m_intake, IntakeConstants.deployAngle*0.9).withTimeout(3));
         SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
         // TODO: configure additional autonomous routines here
         return chooser;
