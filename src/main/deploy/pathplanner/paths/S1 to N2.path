@@ -48,16 +48,25 @@
     },
     {
       "anchor": {
-        "x": 7.756,
-        "y": 4.0
+<<<<<<< Updated upstream
+        "x": 7.756033333333333,
+        "y": 2.4265005931198096
       },
       "prevControl": {
-        "x": 7.76611111111111,
-        "y": 3.551266666666667
+        "x": 7.701125583234479,
+        "y": 2.7815539739027275
+=======
+        "x": 7.7535587188612105,
+        "y": 5.977034400948992
+      },
+      "prevControl": {
+        "x": 7.698650968762356,
+        "y": 6.33208778173191
+>>>>>>> Stashed changes
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "n2"
+      "linkedName": "m1"
     }
   ],
   "rotationTargets": [
@@ -78,7 +87,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -87,7 +96,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.9949427051286
+<<<<<<< Updated upstream
+    "rotation": 90.33789426961546
+=======
+    "rotation": -90.0
+>>>>>>> Stashed changes
   },
   "reversed": false,
   "folder": null,
@@ -95,5 +108,5 @@
     "velocity": 0,
     "rotation": 47.4526649536739
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
