@@ -58,7 +58,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return the estimated field-centric pose of the robot, or {@code null}.
+     * @return the estimated field-centric pose of the robot, or
+     *         {@code null}.
      */
     @Override
     public VisionPoseEstimate getEstimatedRobotPose() {
@@ -69,10 +70,7 @@ public class PhotonVisionCamera implements VisionCamera {
                 visionEst = estimateBestPose(pipelineResult);
             }
         }
-        if (!visionEst.isPresent()) {
-            return null;
-        }
-        return new VisionPoseEstimate(visionEst.get(), addFiducialIDs(visionEst.get()));
+        return visionEst.isPresent() ? new VisionPoseEstimate(visionEst.get()) : null;
     }
 
     private Collection<Integer> addFiducialIDs(EstimatedRobotPose visionEst) {
@@ -129,8 +127,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return whether the observed target is on a list of IDs. If the ID list
-     * is empty, then match any target.
+     * @return whether the observed target is on a list of IDs. If the ID
+     *         list is empty, then match any target.
      */
     private boolean isFiducialListMatch(PhotonTrackedTarget target, Integer... fiducialIDs) {
         if (fiducialIDs == null || fiducialIDs.length == 0) {
@@ -145,8 +143,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * Convert a pipeline result and target to an {@code AprilTag} object with a
-     * field-relative {@code Pose3d}.
+     * Convert a pipeline result and target to an {@code AprilTag} object
+     * with a field-relative {@code Pose3d}.
      */
     private AprilTag toAprilTag(PhotonPipelineResult pipelineResult, PhotonTrackedTarget target) {
         Optional<EstimatedRobotPose> visionEst = estimateBestPose(pipelineResult);
@@ -168,7 +166,8 @@ public class PhotonVisionCamera implements VisionCamera {
     }
 
     /**
-     * @return whether this target should be excluded from vision processing.
+     * @return whether this target should be excluded from vision
+     *         processing.
      */
     private boolean isBadTarget(PhotonTrackedTarget target) {
         return target.getPoseAmbiguity() > VisionConstants.kMaxAmbiguity;

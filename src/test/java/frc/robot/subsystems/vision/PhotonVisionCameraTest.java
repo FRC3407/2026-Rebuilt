@@ -165,8 +165,7 @@ public class PhotonVisionCameraTest {
                 Pose3d pose3d = new Pose3d();
                 EstimatedRobotPose visionEst = new EstimatedRobotPose(pose3d, 0.0, new ArrayList<PhotonTrackedTarget>(),
                         PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR); // Simulate a valid pose
-                        Collection<Integer> idList = new TreeSet<>(Arrays.asList(15, 5));
-                return new VisionPoseEstimate(visionEst, idList);
+                return new VisionPoseEstimate(visionEst);
             }
         };
 
